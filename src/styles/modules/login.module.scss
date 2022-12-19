@@ -1,0 +1,18 @@
+@import "../colors";
+
+.loginForm {
+    width: 100%;
+    max-width: 400px;
+}
+.loginGallery {
+    background-color: $secondary;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-size: cover;
+}
+
+// .loginFormWrapper {
+//     background-image: url("/images/wave.jpg");
+//     background-position: center center;
+//     background-repeat: no-repeat;
+// }

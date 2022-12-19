@@ -1,0 +1,15 @@
+@import "../colors";
+
+.logoutBtn {
+    text-transform: uppercase;
+    /* svg {
+        color: $gray-500;
+    } */
+    &:hover {
+        color: white;
+
+        /* svg {
+            color: white;
+        } */
+    }
+}

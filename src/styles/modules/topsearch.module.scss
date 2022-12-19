@@ -1,0 +1,33 @@
+@import "../colors";
+
+.topSearchWrapper {
+    width: 100%;
+    position: relative;
+
+    input {
+        &::placeholder {
+            color: $gray-500;
+        }
+
+        &::-webkit-search-decoration,
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-results-button,
+        &::-webkit-search-results-decoration {
+            display: none;
+        }
+    }
+    > button {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        color: $gray-600;
+        width: 30px;
+        height: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+
+        &:hover {
+            color: $primary;
+        }
+    }
+}
