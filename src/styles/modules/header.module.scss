@@ -2,11 +2,12 @@
 
 .logoutBtn {
     text-transform: uppercase;
+    color: white;
     /* svg {
         color: $gray-500;
     } */
     &:hover {
-        color: white;
+        color: white !important;
 
         /* svg {
             color: white;

@@ -5,6 +5,7 @@
     position: relative;
 
     input {
+        height: 57px;
         &::placeholder {
             color: $gray-500;
         }
@@ -30,4 +31,9 @@
             color: $primary;
         }
     }
+}
+
+.topSearchSelect {
+    height: 57px;
+    max-width: 200px;
 }

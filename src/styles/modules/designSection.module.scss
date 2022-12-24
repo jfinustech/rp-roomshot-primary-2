@@ -1,0 +1,97 @@
+@import "../colors";
+
+.sideSection {
+    width: 150px;
+}
+.sideSectionInner {
+    padding: 15px;
+    // height: 100%;
+    width: 100%;
+    max-height: calc(100vh - 50px);
+    overflow: scroll;
+    overscroll-behavior: contain;
+}
+.sideSectionSmall {
+    --smallsidewidth: 50px;
+    width: var(--smallsidewidth);
+
+    .sideSectionSmallTabHolder {
+        transform: rotate(90deg);
+        transform-origin: left top;
+        width: var(--smallsidewidth);
+        margin-left: var(--smallsidewidth);
+        width: fit-content;
+
+        button {
+            --tabbuttonwidth: 150px;
+            width: var(--tabbuttonwidth);
+            height: calc(var(--smallsidewidth) + 1px);
+            background: $gray-100;
+            color: $gray-600;
+            border: 0;
+            border-right: 1px solid $gray-300;
+            border-bottom: 1px solid $gray-300;
+            border-top: 1px solid $gray-300;
+
+            &:hover {
+                background-color: $gray-200;
+            }
+
+            &.active {
+                color: $primary;
+                background: white;
+                border-bottom: none;
+            }
+        }
+    }
+
+    // a {
+    //     transform: rotate(90deg);
+    //     transform-origin: left top;
+    //     margin-left: 50px;
+    //     background-color: silver;
+
+    //     height: 100px;
+    //     width: 100px;
+    //     text-decoration: none;
+    //     padding: 10px;
+    //     border-right: 1px solid red;
+
+    //     span {
+    //         display: block;
+    //         width: 100px;
+    //     }
+    // }
+}
+.designSectionMain {
+    // min-height: 150px;
+    // max-height: calc(100vh - 30px);
+    // overflow: scroll;
+    background-color: white;
+    min-height: 150px;
+    scroll-margin-top: 15px;
+}
+.contentSection {
+    // max-height: calc(100vh - 50px);
+    // overflow: scroll;
+    .contentSectionInner {
+        padding: 30px;
+        width: 100%;
+    }
+}
+
+.sectionLoadingCover {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+
+    .sectionLoadingCoverInner {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+.designSectionWrapper {
+    min-height: 100px;
+}

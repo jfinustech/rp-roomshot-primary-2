@@ -1,0 +1,31 @@
+.actionWrapper {
+    label {
+        font-size: 14px;
+    }
+}
+
+.btnDeleteAll {
+    span {
+        overflow-x: hidden;
+        width: 0;
+        height: 20px;
+        display: inline-block;
+    }
+
+    svg {
+        margin-top: -5px;
+    }
+
+    &:hover {
+        // background-color: red !important;
+        border-color: red !important;
+        color: red !important;
+
+        svg {
+            display: none;
+        }
+        span {
+            width: auto;
+        }
+    }
+}
