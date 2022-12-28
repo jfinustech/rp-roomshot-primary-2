@@ -42,10 +42,6 @@ function Login() {
             setError("");
             dispatchLogin({ type: "SET_TRUE" });
         } else {
-            console.log(
-                process.env.REACT_APP_USERNAME,
-                process.env.REACT_APP_PASSWORD
-            );
             setError("Invalid username or password. Try again.");
             dispatchLogin({ type: "SET_FALSE" });
         }
