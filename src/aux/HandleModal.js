@@ -1,8 +1,15 @@
 import { Modal } from "bootstrap";
 import { createRoot } from "react-dom/client";
 import BootstrapModal from "../components/BootstrapModal";
+import MainContextProvider from "../components/MainContext";
 
-export const HandleModal = (title, dataComponent, data) => {
+export const HandleModal = (
+    title,
+    dataComponent,
+    data,
+    act = null,
+    size = "modal-xl"
+) => {
     let RootID = "modalroot";
     let MainModalRoot = document.querySelector(`#${RootID}`);
     if (MainModalRoot) MainModalRoot.remove();
@@ -14,11 +21,15 @@ export const HandleModal = (title, dataComponent, data) => {
     new Promise((resolve) => {
         const root = createRoot(document.getElementById(`${RootID}`));
         root.render(
-            <BootstrapModal
-                title={title}
-                dataComponent={dataComponent}
-                data={data}
-            />
+            <MainContextProvider>
+                <BootstrapModal
+                    title={title}
+                    dataComponent={dataComponent}
+                    data={data}
+                    act={act}
+                    size={size}
+                />
+            </MainContextProvider>
         );
 
         resolve();

@@ -10,7 +10,7 @@ const VENDORLIST_URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 function Search() {
     const [vendorList, setVendorList] = useState([]);
     const { mainVendor, dispatch } = useContext(MainContext);
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         const fetch = async () => {
@@ -43,6 +43,7 @@ function Search() {
                     className={`form-control rounded-0 border-0 border-bottom border-end px-3 ${styles.topSearchSelect}`}
                     name="vendor"
                     onChange={(e) => {
+                        setSearchParams({});
                         dispatch({
                             type: "SET_VENDOR",
                             payload: e.target.value,

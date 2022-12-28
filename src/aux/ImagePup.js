@@ -1,6 +1,9 @@
-export const ImagePup = (image) => {
+export const ImagePup = (image, imageType = "roomshot") => {
     if (image === "" || typeof image === "undefined") return;
-    const image_src = image.replace("_thumb.jpg", "_large.jpg");
+    const image_src =
+        imageType === "roomshot"
+            ? image.replace("_thumb.jpg", "_large.jpg")
+            : image.replace("_thumb.jpg", ".jpg");
     const div = document.createElement("div");
     div.classList = "modalwrapper text-white modalwrapper_close";
     div.setAttribute(
@@ -57,14 +60,12 @@ export const ImagePup = (image) => {
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 div.remove();
-                // document.body.classList = "";
             }
             document.removeEventListener("keydown", null);
         });
-        document.addEventListener("scroll", () => {
+        document.addEventListener("wheel", (e) => {
             div.remove();
-            // document.body.classList = "";
-            document.removeEventListener("scroll", null);
+            document.removeEventListener("wheel", null);
         });
     });
 };

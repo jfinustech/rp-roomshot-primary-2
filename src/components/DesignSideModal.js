@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiX, FiImage, FiEye, FiSearch } from "react-icons/fi";
 import styles from "../styles/modules/sideSectionModal.module.scss";
 import { createId } from "../aux/Helper";
 import { ImagePup } from "../aux/ImagePup";
 
-function DesignSideModal({ Items }) {
+function DesignSideModal({ Items, handleItem }) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
+    const [galleryItems, setGalleryItems] = useState([]);
 
     const handleFindItem = (src) => {
         const itemSrc = src;
@@ -34,7 +35,16 @@ function DesignSideModal({ Items }) {
         }, 3000);
     };
 
-    if (!Items || Items.length <= 0)
+    const handleDeleteGallery = async (item) => {
+        await handleItem(item);
+        setGalleryItems(galleryItems.filter((f) => f.id !== item.id));
+    };
+
+    useEffect(() => {
+        setGalleryItems(Items);
+    }, [Items]);
+
+    if (!galleryItems || galleryItems.length <= 0)
         return (
             <div className="text-muted d-block text-center p-5">
                 <h1 className="text-primary">
@@ -46,10 +56,10 @@ function DesignSideModal({ Items }) {
 
     return (
         <div className="d-flex flex-wrap justify-content-start align-items-center gap-3">
-            {Items.map((item) => (
+            {galleryItems.map((item) => (
                 <div
                     key={item.id}
-                    className={`position-relative overflow-hidden mb-2 ${styles.sidePupImageWrapper}`}
+                    className={`position-relative overflow-hidden mb-2 modalGalleryItem ${styles.sidePupImageWrapper}`}
                 >
                     <div className={`border d-flex flex-column flex-1`}>
                         <div className="p-2 text-center position-relative">
@@ -75,7 +85,10 @@ function DesignSideModal({ Items }) {
                             <img src={item.imgThumb} alt={item.designShape} />
                         </div>
                         <div className="position-relative">
-                            <button className="d-flex justify-content-center align-items-center">
+                            <button
+                                className="d-flex justify-content-center align-items-center"
+                                onClick={(e) => handleDeleteGallery(item)}
+                            >
                                 <FiX />
                             </button>
                             <small

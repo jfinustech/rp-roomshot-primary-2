@@ -2,9 +2,19 @@ import { useEffect, useRef, useContext } from "react";
 import { MainContext } from "./MainContext";
 import { Tooltip } from "bootstrap";
 import styles from "../styles/modules/designSectionAction.module.scss";
-import { FiTrash2 } from "react-icons/fi";
+import { FiTrash2, FiCopy } from "react-icons/fi";
+import UploadFile from "./UploadFile";
+import { HandleModal } from "../aux/HandleModal";
 
-function DesignSectionAction({ handleSoftDeleteBulk }) {
+function DesignSectionAction({
+    handleSoftDeleteBulk,
+    designid,
+    designcolor,
+    vendor,
+    vendorname,
+    handleUploadResponse,
+    reloadInitPage,
+}) {
     const randomid = Math.floor(Math.random() * 99999);
     const {
         hideDeleted,
@@ -13,18 +23,37 @@ function DesignSectionAction({ handleSoftDeleteBulk }) {
         dispatchHideAssigned,
     } = useContext(MainContext);
 
-    const btnRef = useRef();
+    const btnDeleteRef = useRef();
+    const btnTransferRef = useRef();
+
+    const handleSkuTransfer = (e) => {
+        e.preventDefault();
+
+        HandleModal(
+            "SKU Transfer",
+            "SkuTransfer",
+            {
+                vendor,
+                vendorname,
+                designid,
+                designcolor,
+            },
+            reloadInitPage,
+            "modal-lg"
+        );
+    };
 
     // console.log(tooltip);
 
     useEffect(() => {
-        new Tooltip(btnRef.current);
+        new Tooltip(btnDeleteRef.current);
+        if (btnTransferRef.current) new Tooltip(btnTransferRef.current);
     }, []);
 
     return (
         <>
             <div
-                className={`d-flex justify-content-start align-items-center w-100 border-top pt-2 mt-2 mb-5 gap-3 ${styles.actionWrapper}`}
+                className={`d-flex justify-content-start align-items-start w-100 border-top pt-2 mt-2 mb-5 gap-3 ${styles.actionWrapper}`}
             >
                 <div className="cursor-pointer form-check form-switch user-select-none">
                     <input
@@ -69,8 +98,8 @@ function DesignSectionAction({ handleSoftDeleteBulk }) {
                     </label>
                 </div>
                 <button
-                    ref={btnRef}
-                    className={`ms-auto btn border border text-muted rounded-pill py-1 px-4 ${styles.btnDeleteAll}`}
+                    ref={btnDeleteRef}
+                    className={`ms-auto btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
                     data-bs-title="This will delete all images that are not assigned as primary or
@@ -78,10 +107,24 @@ function DesignSectionAction({ handleSoftDeleteBulk }) {
                     onClick={() => handleSoftDeleteBulk()}
                 >
                     <FiTrash2 />
-                    <span>
-                        <small>Soft Delete All Non-Selected Images</small>
-                    </span>
                 </button>
+                {parseInt(vendor) === 8800 && (
+                    <button
+                        ref={btnTransferRef}
+                        className={`btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Transfer items whithin this design or collection to a new brand."
+                        onClick={handleSkuTransfer}
+                    >
+                        <FiCopy />
+                    </button>
+                )}
+                <UploadFile
+                    designid={designid}
+                    designcolor={designcolor}
+                    handleUploadResponse={handleUploadResponse}
+                />
             </div>
         </>
     );

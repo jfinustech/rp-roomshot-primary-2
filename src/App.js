@@ -13,8 +13,8 @@ function App() {
     const [hasError, setHasError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [searchParams, setSearchParams] = useSearchParams();
-
     const { mainVendor } = useContext(MainContext);
+    const [reloadPage, setReloadPage] = useState();
 
     const handleQuery = (q) => {
         const new_query = {
@@ -25,7 +25,7 @@ function App() {
     };
 
     useEffect(() => {
-        const fetch = async () => {
+        const fetchInitPage = async () => {
             setIsLoading(true);
             await axios({
                 method: "POST",
@@ -51,17 +51,25 @@ function App() {
                 });
         };
 
-        fetch();
-    }, [searchParams, mainVendor]);
+        fetchInitPage();
+    }, [searchParams, mainVendor, reloadPage]);
 
     return (
         <div className="container-fluid my-3">
-            {isLoading && <Loading cover={true} />}
+            {isLoading && (
+                <div id="loadingwrapper">
+                    <Loading cover={true} />
+                </div>
+            )}
             {hasError && <div>{errorMessage}</div>}
-            {!isLoading && !hasError && designs.length > 0 && (
+            {!hasError && designs.length > 0 && (
                 <>
                     {designs.map((design) => (
-                        <DesignSection key={design.id} design={design} />
+                        <DesignSection
+                            key={design.id}
+                            design={design}
+                            reloadInitPage={setReloadPage}
+                        />
                     ))}
                     <Pagination
                         current_page={searchParams.get("page") ?? 1}

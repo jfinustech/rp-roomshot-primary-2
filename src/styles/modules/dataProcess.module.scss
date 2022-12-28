@@ -1,0 +1,87 @@
+@import "../colors";
+
+.dataProcessWrapper {
+    position: fixed;
+    bottom: 0;
+    left: 30px;
+    width: 350px;
+    background: white;
+    // min-height: 140px;
+    z-index: 99999;
+    overflow: hidden;
+    border-radius: 5px 5px 0 0;
+
+    --data-process-padding-lr: 10px;
+    --data-process-padding-tb: 10px;
+    --data-process-fs: 90%;
+
+    transition: bottom 0.3s ease-in-out;
+
+    ul {
+        list-style: none;
+        top: 0;
+        bottom: 0;
+        overflow: scroll;
+        overscroll-behavior: contain;
+        max-height: 300px;
+
+        li {
+            padding: var(--data-process-padding-tb)
+                var(--data-process-padding-lr);
+
+            small {
+                font-size: 70%;
+                line-height: 20px;
+                display: block;
+                color: $gray-600;
+            }
+
+            p {
+                font-size: var(--data-process-fs);
+            }
+
+            &:not(:last-child) {
+                border-bottom: 1px solid $gray-400;
+            }
+
+            .statusiconwrapper {
+                width: 40px;
+                height: 40px;
+                font-size: 23px;
+            }
+        }
+    }
+
+    .dataProcessHeader {
+        height: 35px;
+        width: 100%;
+        background: $info;
+        padding: 0 var(--data-process-padding-lr);
+        color: white;
+        span {
+            font-size: var(--data-process-fs);
+        }
+
+        .dataProcessIconMinus {
+            display: block;
+        }
+        .dataProcessIconPlus {
+            display: none;
+        }
+    }
+
+    &.dataProcessCollapse {
+        // bottom: calc(-100% - 30px);
+        ul {
+            // max-height: 0;
+        }
+        .dataProcessHeader {
+            .dataProcessIconMinus {
+                display: none;
+            }
+            .dataProcessIconPlus {
+                display: block;
+            }
+        }
+    }
+}

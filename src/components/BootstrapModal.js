@@ -1,30 +1,44 @@
 import DesignSideModal from "./DesignSideModal";
+import SkuTransfer from "./SkuTransfer";
 
-function BootstrapModal({ title, dataComponent, data }) {
+function BootstrapModal({
+    title,
+    dataComponent,
+    data,
+    act,
+    size = "modal-xl",
+}) {
     return (
         <div
             className="modal fade"
             id="MainModal"
-            // tabIndex="-1"
             aria-labelledby="MainModalLabel"
             aria-hidden="true"
         >
-            <div className="modal-dialog modal-xl">
+            <div className={`modal-dialog ${size}`}>
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h1 className="modal-title fs-5" id="MainModalLabel">
+                        <h4
+                            className="fw-normal p-0 m-0"
+                            id="MainModalLabel"
+                            style={{ fontSize: "1.12rem" }}
+                        >
                             {title}
-                        </h1>
+                        </h4>
                         <button
                             type="button"
-                            className="btn-close"
+                            className="btn-close px-3"
                             data-bs-dismiss="modal"
                             aria-label="Close"
+                            style={{ fontSize: 12 }}
                         ></button>
                     </div>
                     <div className="modal-body">
                         {dataComponent === "DesignSideModal" && (
-                            <DesignSideModal Items={data} />
+                            <DesignSideModal Items={data} handleItem={act} />
+                        )}
+                        {dataComponent === "SkuTransfer" && (
+                            <SkuTransfer data={data} reloadInitPage={act} />
                         )}
                     </div>
                     {/* <div className="modal-footer">

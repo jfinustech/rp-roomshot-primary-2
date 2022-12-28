@@ -1,0 +1,7 @@
+@import "../colors";
+.uploadbtn {
+    &:hover {
+        background: $info !important;
+        border-color: $info !important;
+    }
+}

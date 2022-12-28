@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useState } from "react";
 
 export const MainContext = createContext();
 
@@ -47,6 +47,16 @@ const handleHideAssigned = (state, action) => {
             return state;
     }
 };
+const handleToggleImagePop = (state, action) => {
+    switch (action.type) {
+        case "TOGGLE_POPUP":
+            const payload = action.payload;
+            localStorage.setItem("toggleImagePop", payload);
+            return payload;
+        default:
+            return state;
+    }
+};
 
 const MainContextProvider = (props) => {
     const current_login_state =
@@ -72,6 +82,10 @@ const MainContextProvider = (props) => {
         handleHideAssigned,
         localStorage.getItem("hideAssigned") ?? "0"
     );
+    const [toggleImagePop, dispatchToggleImagePop] = useReducer(
+        handleToggleImagePop,
+        localStorage.getItem("imagePop") ?? false
+    );
 
     const contextValues = {
         isLoggedIn,
@@ -82,6 +96,8 @@ const MainContextProvider = (props) => {
         dispatchHideDelete,
         hideAssigned,
         dispatchHideAssigned,
+        toggleImagePop,
+        dispatchToggleImagePop,
     };
 
     return (

@@ -6,24 +6,54 @@ import DesignImageBox from "./DesignImageBox";
 import DesignSectionAction from "./DesignSectionAction";
 import DesignSideList from "./DesignSideList";
 import Loading from "./Loading";
-import { FiMaximize2 } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiMaximize2 } from "react-icons/fi";
 import { SetShape } from "../aux/SetShape";
 import { SetPrimary } from "../aux/SetPrimary";
 import { SetSoftDelete } from "../aux/SetSoftDelete";
 import { SetHardDelete, SetHardDeleteBulk } from "../aux/SetHardDelete";
 import { HandleModal } from "../aux/HandleModal";
+import { hydrateRoot } from "react-dom/client";
+import DesignVendorTabs from "./DesignVendorTabs";
 
 const VIEW_URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 
-function DesignSection({ design }) {
+function DesignSection({ design, reloadInitPage }) {
     const [images, setImages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [reload, setReload] = useState("");
     const sectionRef = useRef();
+    const collapseBtnRef = useRef();
     const [primaryList, setPrimaryList] = useState([]);
     const [shapeList, setShapeList] = useState([]);
+
+    const handleCollapseSection = (e) => {
+        const isCollapsed = sectionRef.current.classList.contains(
+            styles.collapsSection
+        );
+        const sectionsArray = document.querySelectorAll(
+            ".none-module-section-wrapper"
+        );
+
+        if (isCollapsed) {
+            if (e.shiftKey) {
+                sectionsArray.forEach((s) => {
+                    s.classList.remove(styles.collapsSection);
+                });
+            } else {
+                sectionRef.current.classList.remove(styles.collapsSection);
+            }
+        } else {
+            if (e.shiftKey) {
+                sectionsArray.forEach((s) => {
+                    s.classList.add(styles.collapsSection);
+                });
+            } else {
+                sectionRef.current.classList.add(styles.collapsSection);
+            }
+        }
+    };
 
     const [designFilter, setDesignFilter] = useState({
         designid: design.designID,
@@ -149,16 +179,29 @@ function DesignSection({ design }) {
     };
 
     const handleSoftDeleteBulk = async (items = images) => {
+        const div = document.createElement("div");
+        div.id = "loadingwrapper";
+        document.querySelector("body").appendChild(div);
+        hydrateRoot(
+            document.getElementById("loadingwrapper"),
+            <Loading cover />
+        );
+
         const bulklist = images.filter(
             (img) =>
                 !img.is_primary && img.designShape === null && img.show_image
         );
 
-        if (bulklist.length <= 0) return;
+        if (bulklist.length <= 0) {
+            div.remove();
+            return;
+        }
 
         for (const key in bulklist) {
             await handleSoftDelete(bulklist[key]);
         }
+
+        div.remove();
     };
 
     const handleHardDelete = async (item) => {
@@ -211,6 +254,11 @@ function DesignSection({ design }) {
             });
     };
 
+    const handleUploadResponse = (newItem) => {
+        const newImages = [...newItem, ...images];
+        setImages(newImages);
+    };
+
     useEffect(() => {
         setIsLoading(true);
 
@@ -254,7 +302,7 @@ function DesignSection({ design }) {
         <>
             <section
                 ref={sectionRef}
-                className={`position-relative border mb-3 ${
+                className={`position-relative none-module-section-wrapper border mb-3 ${
                     (styles.designSectionWrapper, styles.designSectionMain)
                 }`}
             >
@@ -276,7 +324,8 @@ function DesignSection({ design }) {
                                     HandleModal(
                                         "Primary Items",
                                         "DesignSideModal",
-                                        primaryList
+                                        primaryList,
+                                        handlePrimary
                                     )
                                 }
                                 className="d-flex justify-content-between align-items-center px-3 cursor-pointer border-bottom m-0 py-2 fw-normal w-100"
@@ -306,7 +355,8 @@ function DesignSection({ design }) {
                                     HandleModal(
                                         "Selected Shapes",
                                         "DesignSideModal",
-                                        shapeList
+                                        shapeList,
+                                        handleShape
                                     )
                                 }
                                 className="d-flex justify-content-between align-items-center px-3 cursor-pointer border-bottom m-0 py-2 fw-normal w-100"
@@ -334,7 +384,7 @@ function DesignSection({ design }) {
                         }
                     >
                         <div className={`${styles.contentSectionInner}`}>
-                            <div className="d-flex mb-3">
+                            <div className="d-flex justify-content-between align-items-start mb-3">
                                 <div>
                                     <h3 className="p-0 m-0">
                                         {designFilter.collectionname}
@@ -360,9 +410,27 @@ function DesignSection({ design }) {
                                         </p>
                                     </div>
                                 </div>
+                                <button
+                                    className={`${styles.showHidePannelBtn} btn btn-outline-secondary rounded rounded-pill d-flex justify-content-center align-items-center p-0 m-0`}
+                                    ref={collapseBtnRef}
+                                    onClick={handleCollapseSection}
+                                >
+                                    <FiChevronUp
+                                        className={`${styles.showHideSvgHide}`}
+                                    />
+                                    <FiChevronDown
+                                        className={`${styles.showHideSvgShow}`}
+                                    />
+                                </button>
                             </div>
                             <DesignSectionAction
                                 handleSoftDeleteBulk={handleSoftDeleteBulk}
+                                designid={designFilter.designid}
+                                designcolor={designFilter.designcolor}
+                                vendor={designFilter.vendor}
+                                vendorname={designFilter.vendorname}
+                                handleUploadResponse={handleUploadResponse}
+                                reloadInitPage={reloadInitPage}
                             />
                             <div className="align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-4">
                                 {images.length > 0 &&
@@ -382,44 +450,12 @@ function DesignSection({ design }) {
                             </div>
                         </div>
                     </div>
-                    <div
-                        className={`align-self-stretch flex-shrink-0 justify-content-start border-start ${styles.sideSectionSmall}`}
-                    >
-                        <div
-                            className="sticky sticky-top"
-                            style={{
-                                height:
-                                    (images[0]?.vendors?.length ?? 1) * 150 - 1,
-                            }}
-                        >
-                            <div
-                                className={`d-flex justify-content-start align-items-center ${styles.sideSectionSmallTabHolder}`}
-                            >
-                                {images[0]?.vendors.map((vendor) => (
-                                    <button
-                                        key={vendor.id}
-                                        className={`flex-shringk-0 flex-shrink-0 ${
-                                            parseInt(designFilter.vendor) ===
-                                            parseInt(vendor.id)
-                                                ? styles.active
-                                                : ""
-                                        }`}
-                                        onClick={(e) =>
-                                            handleChangeVendor(
-                                                vendor.id,
-                                                vendor.name,
-                                                vendor.did,
-                                                vendor.didcolor,
-                                                vendor.didcollection
-                                            )
-                                        }
-                                    >
-                                        <span>{vendor.name}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+
+                    <DesignVendorTabs
+                        images={images[0]}
+                        designFilter={designFilter}
+                        handleChangeVendor={handleChangeVendor}
+                    />
                 </div>
                 {/* )} */}
             </section>
