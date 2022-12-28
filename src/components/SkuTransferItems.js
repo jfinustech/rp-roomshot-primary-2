@@ -30,6 +30,30 @@ function SkuTransferItems({
         });
     };
 
+    const handleGroupSelect = (e) => {
+        if (!e.metaKey) return;
+
+        const groupClass = e.target.dataset.group;
+        const inputChecked = !e.currentTarget.querySelector("input").checked;
+        const inputGroup = document.getElementsByClassName(`${groupClass}`);
+
+        if (inputChecked !== undefined) {
+            [...inputGroup].map((inp) => {
+                inp.checked = inputChecked;
+                handleSelection(inp);
+            });
+        }
+
+        //size-${s.size}
+        // const input = e.target.querySelector("input");
+
+        // console.log(input.checked);
+
+        return;
+        // console.log(e.metaKey);
+        // if (!e.shiftKey) return;
+    };
+
     const handleImagePopOver = (e, img) => {
         if (!toggleSizeImages) return;
         if (!img) return;
@@ -184,18 +208,28 @@ function SkuTransferItems({
                                                         e.target
                                                     ).dispose()
                                                 }
+                                                data-group={`size-${
+                                                    s.size
+                                                }-${sh.shape.toLowerCase()}`}
+                                                onClick={handleGroupSelect}
                                             >
                                                 <input
-                                                    className="form-check-input specificoption"
+                                                    className={`form-check-input specificoption size-${
+                                                        s.size
+                                                    }-${sh.shape.toLowerCase()}`}
                                                     type="checkbox"
                                                     value=""
                                                     id={s.id}
                                                     checked={s.selected}
                                                     name="size"
+                                                    data-readonly={s?.readonly}
                                                     data-did={didData?.design}
                                                     data-size={s.size}
                                                     data-shape={sh.shape}
                                                     data-act="size"
+                                                    data-group={`size-${
+                                                        s.size
+                                                    }-${sh.shape.toLowerCase()}`}
                                                     onChange={handleSelection}
                                                 />
                                                 {s.size}

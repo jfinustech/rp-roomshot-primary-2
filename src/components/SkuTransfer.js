@@ -18,6 +18,7 @@ function SkuTransfer({
     const [vendorListOptions, setVendorListOptions] = useState([]);
     const [transferToVendor, setTransferToVendor] = useState();
     const [transferOptions, setTransferOptions] = useState([]);
+    const [transferOptionsDetails, setTransferOptionsDetails] = useState([]);
     const [transferOptionLoading, setTransferOptionLoading] = useState(false);
     const [vendorLoading, setVendorLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
@@ -239,6 +240,11 @@ function SkuTransfer({
                 .then((d) => {
                     if (d.data) {
                         setTransferOptions(d.data[0]);
+                        const initdid = d.data[0].initdesign;
+                        const innitoptions = d.data[0].designoptions.filter(
+                            (f) => f.design === initdid
+                        );
+                        setTransferOptionsDetails(innitoptions);
                     }
                     setTransferOptionLoading(false);
                 })
@@ -524,6 +530,20 @@ function SkuTransfer({
             });
     };
 
+    const handleFilter = (e) => {
+        const value = e.target.value;
+
+        if (!value) {
+            setTransferOptionsDetails(transferOptions.designoptions);
+            return;
+        }
+
+        const newTransferOptions = transferOptions.designoptions.filter(
+            (e) => e.design === value
+        );
+        setTransferOptionsDetails(newTransferOptions);
+    };
+
     const handleTranslationDebounce = debounce(handleTranslation, 300);
 
     if (vendorLoading && Object.keys(transferOptions).length <= 0)
@@ -605,7 +625,8 @@ function SkuTransfer({
                         )}
                     {!hasError &&
                         transferToVendor > 0 &&
-                        !transferOptionLoading && (
+                        !transferOptionLoading &&
+                        transferOptions && (
                             <div className="py-3">
                                 <div className="row">
                                     <div className="col-12 py-3">
@@ -717,32 +738,31 @@ function SkuTransfer({
                                             Options
                                         </div>
                                     </div>
-                                    {/* <div className="col-12 mb-3">
-                                        <label className="form-label-sm d-block mb-3 pb-2 border-bottom">
-                                            Collection
-                                        </label>
-                                        <div className="form-check">
-                                            <input
-                                                className="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="flexCheckDefault"
-                                                onChange={
-                                                    handleEntireCollection
-                                                }
-                                            />
-                                            <label
-                                                className="form-check-label form-label-sm"
-                                                htmlFor="flexCheckDefault"
-                                            >
-                                                Transfer Entire{" "}
-                                                {
-                                                    transferOptions.originalCollectionName
-                                                }{" "}
-                                                Collection
-                                            </label>
-                                        </div>
-                                    </div> */}
+                                    <div className="col-12 mb-3">
+                                        <select
+                                            name=""
+                                            id=""
+                                            className="form-control form-control-sm"
+                                            onChange={handleFilter}
+                                            defaultValue={
+                                                transferOptions?.initdesign
+                                            }
+                                        >
+                                            <option value="">
+                                                --Show All--
+                                            </option>
+                                            {transferOptions?.filters?.map(
+                                                (f) => (
+                                                    <option
+                                                        key={f.id}
+                                                        value={f.design}
+                                                    >
+                                                        {f.design}
+                                                    </option>
+                                                )
+                                            )}
+                                        </select>
+                                    </div>
                                     <div className="col-12">
                                         <div
                                             className="row mb-3 py-2 px-4 p-0 border-bottom border-top"
@@ -807,24 +827,23 @@ function SkuTransfer({
                                             </div>
                                         </div>
 
-                                        {transferOptions.designoptions?.map(
-                                            (did) => (
-                                                <SkuTransferItems
-                                                    key={did.design}
-                                                    did={did}
-                                                    handleSelection={
-                                                        handleSelection
-                                                    }
-                                                    toggleSizeImages={
-                                                        toggleSizeImages
-                                                    }
-                                                    transferToVendor={
-                                                        transferToVendor
-                                                    }
-                                                    render={renderItems}
-                                                />
-                                            )
-                                        )}
+                                        {/* {transferOptions.designoptions?.map( */}
+                                        {transferOptionsDetails?.map((did) => (
+                                            <SkuTransferItems
+                                                key={did.design}
+                                                did={did}
+                                                handleSelection={
+                                                    handleSelection
+                                                }
+                                                toggleSizeImages={
+                                                    toggleSizeImages
+                                                }
+                                                transferToVendor={
+                                                    transferToVendor
+                                                }
+                                                render={renderItems}
+                                            />
+                                        ))}
 
                                         <div className="d-bloc pt-4 text-end">
                                             <button
