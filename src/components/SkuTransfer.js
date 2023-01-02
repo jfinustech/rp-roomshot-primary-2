@@ -392,8 +392,10 @@ function SkuTransfer({
                                     ? color.rugpalcolor
                                     : color.color,
                             size: size.size,
-                            width: size.wft,
-                            length: size.hft,
+                            width_ft: size.wft,
+                            width_in: size.win,
+                            length_ft: size.hft,
+                            length_in: size.hin,
                             action: "CREATEITEM",
                         });
 
@@ -443,6 +445,8 @@ function SkuTransfer({
     };
 
     const recordNewData = async (data) => {
+        // console.table(data);
+        // return;
         if (document.getElementById("processor"))
             return alert(
                 "There are some SKUs still processing. Please wait until they are done."

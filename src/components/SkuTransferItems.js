@@ -209,13 +209,13 @@ function SkuTransferItems({
                                                     ).dispose()
                                                 }
                                                 data-group={`size-${
-                                                    s.size
+                                                    s.size_class
                                                 }-${sh.shape.toLowerCase()}`}
                                                 onClick={handleGroupSelect}
                                             >
                                                 <input
                                                     className={`form-check-input specificoption size-${
-                                                        s.size
+                                                        s.size_class
                                                     }-${sh.shape.toLowerCase()}`}
                                                     type="checkbox"
                                                     value=""
@@ -228,7 +228,7 @@ function SkuTransferItems({
                                                     data-shape={sh.shape}
                                                     data-act="size"
                                                     data-group={`size-${
-                                                        s.size
+                                                        s.size_class
                                                     }-${sh.shape.toLowerCase()}`}
                                                     onChange={handleSelection}
                                                 />

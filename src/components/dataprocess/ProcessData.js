@@ -23,11 +23,11 @@ function ProcessData({ data, queue, processingQueue, processingStatus }) {
                     },
                 })
                     .then((d) => {
-                        console.log(d.data);
+                        // console.log(d.data);
                         resulve(d.data);
                     })
                     .catch((err) => {
-                        console.log(err);
+                        // console.log(err);
                         reject(err);
                     });
             });
