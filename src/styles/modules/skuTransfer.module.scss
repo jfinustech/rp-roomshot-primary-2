@@ -96,3 +96,23 @@
 
 // .iconArrow
 // .iconCheckMark
+
+.shapeContainer {
+    width: 100%;
+    max-width: 120px;
+    cursor: pointer;
+
+    .shapeContainerTitle {
+        background: $gray-100;
+        font-size: 90%;
+        padding: 3px;
+        margin: 0;
+        display: block;
+    }
+}
+
+.optionRowWrapper {
+    .optionRowWrapperInner:not(:last-child) {
+        // border-bottom: 1px solid $gray-500;
+    }
+}

@@ -27,6 +27,7 @@ function SkuTransfer({
     const [errorMessageVendor, setErrorMessageVendor] = useState("");
     const [renderItems, setRenderItems] = useState();
     const [colNameExist, setColNameExist] = useState(0);
+    const [isFiltered, setIsFiltered] = useState(true);
     const [toggleSizeImages, setToggleSizeImages] = useState(
         localStorage.getItem("toggleImage")
             ? parseInt(localStorage.getItem("toggleImage"))
@@ -88,13 +89,6 @@ function SkuTransfer({
         }
     };
 
-    const handleEntireCollection = (e) => {
-        const options = document.querySelectorAll(".specificoption");
-        options.forEach((element) => {
-            element.disabled = e.target.checked;
-        });
-    };
-
     const handleSelection = (e, option) => {
         const did =
             e?.target?.dataset?.did ?? e?.dataset?.did ?? option?.did ?? null;
@@ -113,12 +107,10 @@ function SkuTransfer({
             e?.dataset?.size ??
             option?.size ??
             null;
-        const act =
-            e?.target?.dataset?.act ?? e?.dataset?.act ?? option?.act ?? null;
+        // const act =
+        //     e?.target?.dataset?.act ?? e?.dataset?.act ?? option?.act ?? null;
         const checked =
             e?.target?.checked ?? e?.checked ?? option?.checked ?? false;
-
-        // console.log(did, color, shape, size, act, checked);
 
         if (did === null) return;
 
@@ -128,80 +120,68 @@ function SkuTransfer({
             if (dopt.design === did) {
                 const designCopy = dopt;
 
-                switch (act) {
-                    case "design":
-                        if (designCopy.readonly) break;
-                        designCopy.selected = checked ? 1 : 0;
-                        //If unchecked, remove all checked colors and sizes
-                        if (!checked) {
-                            dopt.colors.map((c) => (c.selected = 0));
-                            dopt.shapes.map((s) => {
-                                s.sizes.map((z) => (z.selected = 0));
-                                return (s.selected = 0);
-                            });
-                        }
-                        break;
-                    case "color":
-                        designCopy.colors.map((c) => {
-                            if (c.color === color) {
-                                if (!c.readonly) c.selected = checked ? 1 : 0;
-                            }
-                            return c;
-                        });
+                for (let c in designCopy.colors) {
+                    if (designCopy.colors[c].color === color) {
+                        for (let sh in designCopy.colors[c].shapes) {
+                            if (
+                                designCopy.colors[c].shapes[sh].shape === shape
+                            ) {
+                                designCopy.colors[c].shapes[sh].sizes.map(
+                                    (s) => {
+                                        if (
+                                            s.size === size &&
+                                            s.readonly === 0
+                                        ) {
+                                            s.selected = checked ? 1 : 0;
 
-                        const totalSelectedColor = designCopy.colors.filter(
-                            (e) => e.selected === 1
-                        ).length;
-                        if (totalSelectedColor <= 0) {
-                            handleSelection(null, {
-                                did: designCopy.design,
-                                act: "design",
-                                checked: false,
-                            });
-                        } else {
-                            if (designCopy.selected === 0) {
-                                handleSelection(null, {
-                                    did: designCopy.design,
-                                    act: "design",
-                                    checked: true,
-                                });
-                            }
-                        }
-                        break;
+                                            // Check if any options selected, then check the
+                                            // color and desing accordingly.
 
-                    case "size":
-                        designCopy.shapes.map((s) => {
-                            if (s.shape === shape) {
-                                if (!s.readonly) s.selected = checked ? 1 : 0;
+                                            // const hasSelectedSize =
+                                            //     designCopy.colors[c].shapes[
+                                            //         sh
+                                            //     ].sizes.filter(
+                                            //         (szs) =>
+                                            //             szs.selected ===
+                                            //                 1 &&
+                                            //             szs.readonly === 0
+                                            //     ).length;
 
-                                s.sizes.map((z) => {
-                                    if (z.size === size) {
-                                        if (!z.readonly)
-                                            z.selected = checked ? 1 : 0;
+                                            let hasSelectedSize = false;
+
+                                            for (let shz in designCopy.colors[c]
+                                                .shapes) {
+                                                for (let ssz in designCopy
+                                                    .colors[c].shapes[shz]
+                                                    .sizes) {
+                                                    if (
+                                                        designCopy.colors[c]
+                                                            .shapes[shz].sizes[
+                                                            ssz
+                                                        ].selected === 1
+                                                    ) {
+                                                        hasSelectedSize = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                            designCopy.selected =
+                                                hasSelectedSize ? 1 : 0;
+                                            designCopy.colors[c].selected =
+                                                hasSelectedSize ? 1 : 0;
+                                            designCopy.colors[c].shapes[
+                                                sh
+                                            ].selected = hasSelectedSize
+                                                ? 1
+                                                : 0;
+                                        }
+                                        return s;
                                     }
-                                    return z;
-                                });
+                                );
                             }
-
-                            const totalSelectedColor = designCopy.colors.filter(
-                                (e) => e.selected === 1
-                            ).length;
-                            if (totalSelectedColor <= 0) {
-                                handleSelection(null, {
-                                    did: designCopy.design,
-                                    color: designCopy.colors[0].color,
-                                    act: "color",
-                                    checked: true,
-                                });
-                            }
-                            return s;
-                        });
-
-                        break;
-
-                    default:
-                        const a = "b";
-                        break;
+                        }
+                    }
                 }
             }
 
@@ -230,7 +210,7 @@ function SkuTransfer({
                     designid: did,
                     designcolor: clr,
                     search: newVnd,
-                    action: "GETTRANSFERDATA",
+                    action: "GETTRANSFERDATAV2",
                 },
                 headers: {
                     "Content-Type": "application/json",
@@ -355,65 +335,59 @@ function SkuTransfer({
 
         const readyItems = [];
 
-        transferOptions?.designoptions.reduce((didCollection, did) => {
-            if (!did.selected) return didCollection;
-            did.colors.reduce((colorCollection, color) => {
-                if (!color.selected) return colorCollection;
+        const filter_dids = transferOptions?.designoptions.filter(
+            (did) => did.selected === 1
+        );
 
-                let color_readonly = color.readonly;
+        filter_dids.reduce((didCollection, did) => {
+            const colors = did.colors.filter((clr) => clr.selected === 1);
 
-                did.shapes.reduce((shapeCollection, shape) => {
-                    if (!shape.selected) return shapeCollection;
+            for (let color in colors) {
+                for (let shape in colors[color].shapes) {
+                    for (let size in colors[color].shapes[shape].sizes) {
+                        const itemSize =
+                            colors[color].shapes[shape].sizes[size];
 
-                    shape.sizes.reduce((sizeCollection, size) => {
-                        if (!size.selected) return sizeCollection;
-                        // if (all_readonly) return sizeCollection;
-                        if (color_readonly) {
-                            console.log("readonly", color.color);
-                            if (size.readonly) return sizeCollection;
+                        if (
+                            itemSize.selected === 1 &&
+                            itemSize.readonly === 0
+                        ) {
+                            didCollection.push({
+                                fromVendorId: vendor,
+                                toVendorId: transferToVendor,
+                                originalCollectionName:
+                                    transferOptions.originalCollectionName,
+                                newCollectionName:
+                                    transferOptions.newCollectionName,
+                                originalDescription:
+                                    transferOptions.originalDescription,
+                                newDescription: transferOptions.newDescription,
+                                shape: colors[color].shapes[shape].shape,
+                                designid: did.design,
+                                originalColor: colors[color].color,
+                                newColor:
+                                    colors[color].rugpalcolor &&
+                                    parseInt(transferToVendor) === 7600
+                                        ? colors[color].rugpalcolor
+                                        : colors[color].color,
+                                size: itemSize.size,
+                                width_ft: itemSize.wft,
+                                width_in: itemSize.win,
+                                length_ft: itemSize.hft,
+                                length_in: itemSize.hin,
+                                action: "CREATEITEM",
+                            });
                         }
-
-                        shapeCollection.push({
-                            fromVendorId: vendor,
-                            toVendorId: transferToVendor,
-                            originalCollectionName:
-                                transferOptions.originalCollectionName,
-                            newCollectionName:
-                                transferOptions.newCollectionName,
-                            originalDescription:
-                                transferOptions.originalDescription,
-                            newDescription: transferOptions.newDescription,
-                            shape: shape.shape,
-                            designid: did.design,
-                            originalColor: color.color,
-                            newColor:
-                                color.rugpalcolor &&
-                                parseInt(transferToVendor) === 7600
-                                    ? color.rugpalcolor
-                                    : color.color,
-                            size: size.size,
-                            width_ft: size.wft,
-                            width_in: size.win,
-                            length_ft: size.hft,
-                            length_in: size.hin,
-                            action: "CREATEITEM",
-                        });
-
-                        return sizeCollection;
-                    }, didCollection);
-
-                    return shapeCollection;
-                }, didCollection);
-
-                return colorCollection;
-            }, didCollection);
+                    }
+                }
+            }
 
             return didCollection;
         }, readyItems);
 
         const readyRoomshots = [];
 
-        transferOptions?.designoptions.reduce((didCollection, did) => {
+        filter_dids.reduce((didCollection, did) => {
             if (!did.selected) return didCollection;
 
             did.colors.reduce((colorCollection, color) => {
@@ -429,24 +403,16 @@ function SkuTransfer({
             return didCollection;
         }, readyRoomshots);
 
-        if (
-            !readyItems ||
-            readyItems.length <= 0 ||
-            !readyRoomshots ||
-            readyRoomshots.length <= 0
-        )
+        if (readyItems.length <= 0 || readyRoomshots.length <= 0) {
             return alert(
                 "No item selected. Make sure to select design, color, and sizes."
             );
+        }
 
         recordNewData(readyItems);
-        // console.table(readyItems);
-        // console.table(readyRoomshots);
     };
 
     const recordNewData = async (data) => {
-        // console.table(data);
-        // return;
         if (document.getElementById("processor"))
             return alert(
                 "There are some SKUs still processing. Please wait until they are done."
@@ -538,10 +504,12 @@ function SkuTransfer({
         const value = e.target.value;
 
         if (!value) {
+            setIsFiltered(false);
             setTransferOptionsDetails(transferOptions.designoptions);
             return;
         }
 
+        setIsFiltered(true);
         const newTransferOptions = transferOptions.designoptions.filter(
             (e) => e.design === value
         );
@@ -742,6 +710,7 @@ function SkuTransfer({
                                             Options
                                         </div>
                                     </div>
+
                                     <div className="col-12 mb-3">
                                         <select
                                             name=""
@@ -767,6 +736,7 @@ function SkuTransfer({
                                             )}
                                         </select>
                                     </div>
+
                                     <div className="col-12">
                                         <div
                                             className="row mb-3 py-2 px-4 p-0 border-bottom border-top"
@@ -776,56 +746,49 @@ function SkuTransfer({
                                                 marginRight: "-2rem",
                                             }}
                                         >
-                                            <div className="col-3">
+                                            <div className="col-2">
                                                 <label className="form-label-sm d-block fw-bold">
                                                     Design
                                                 </label>
                                             </div>
-                                            <div className="col-3">
+                                            <div className="col-4">
                                                 <label className="form-label-sm d-block fw-bold">
-                                                    Color
+                                                    Color/Size
                                                 </label>
                                             </div>
                                             <div className="col-6">
-                                                <div className="d-flex justify-content-between align-items-start">
-                                                    <label className="form-label-sm d-block fw-bold">
-                                                        Size
-                                                    </label>
-                                                    <div>
-                                                        <div className="form-check form-switch d-flex align-items-center gap-2">
-                                                            <input
-                                                                className="form-check-input"
-                                                                type="checkbox"
-                                                                role="switch"
-                                                                id="showImagePopUps"
-                                                                checked={
-                                                                    toggleSizeImages
-                                                                }
-                                                                onChange={(
-                                                                    e
-                                                                ) => {
-                                                                    localStorage.setItem(
-                                                                        "toggleImage",
-                                                                        e.target
-                                                                            .checked
-                                                                            ? 1
-                                                                            : 0
-                                                                    );
-                                                                    setToggleSizeImages(
-                                                                        e.target
-                                                                            .checked
-                                                                            ? true
-                                                                            : false
-                                                                    );
-                                                                }}
-                                                            />
-                                                            <label
-                                                                className="form-check-label form-label-sm"
-                                                                htmlFor="showImagePopUps"
-                                                            >
-                                                                Image Popup
-                                                            </label>
-                                                        </div>
+                                                <div className="d-flex justify-content-end">
+                                                    <div className="form-check form-switch d-flex align-items-center gap-2">
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            role="switch"
+                                                            id="showImagePopUps"
+                                                            checked={
+                                                                toggleSizeImages
+                                                            }
+                                                            onChange={(e) => {
+                                                                localStorage.setItem(
+                                                                    "toggleImage",
+                                                                    e.target
+                                                                        .checked
+                                                                        ? 1
+                                                                        : 0
+                                                                );
+                                                                setToggleSizeImages(
+                                                                    e.target
+                                                                        .checked
+                                                                        ? true
+                                                                        : false
+                                                                );
+                                                            }}
+                                                        />
+                                                        <label
+                                                            className="form-check-label form-label-sm"
+                                                            htmlFor="showImagePopUps"
+                                                        >
+                                                            Image Popup
+                                                        </label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -845,6 +808,7 @@ function SkuTransfer({
                                                 transferToVendor={
                                                     transferToVendor
                                                 }
+                                                isFiltered={isFiltered}
                                                 render={renderItems}
                                             />
                                         ))}
