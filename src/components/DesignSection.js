@@ -429,6 +429,7 @@ function DesignSection({ design, reloadInitPage }) {
                                 designcolor={designFilter.designcolor}
                                 vendor={designFilter.vendor}
                                 vendorname={designFilter.vendorname}
+                                collection={designFilter.collectionname}
                                 handleUploadResponse={handleUploadResponse}
                                 reloadInitPage={reloadInitPage}
                             />

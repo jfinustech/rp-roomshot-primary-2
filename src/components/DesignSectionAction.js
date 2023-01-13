@@ -12,6 +12,7 @@ function DesignSectionAction({
     designcolor,
     vendor,
     vendorname,
+    collection,
     handleUploadResponse,
     reloadInitPage,
 }) {
@@ -37,6 +38,7 @@ function DesignSectionAction({
                 vendorname,
                 designid,
                 designcolor,
+                collection,
             },
             reloadInitPage,
             "modal-lg"

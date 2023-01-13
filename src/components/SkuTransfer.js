@@ -12,7 +12,7 @@ import MainContextProvider from "./MainContext";
 const VENDORLIST_URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 
 function SkuTransfer({
-    data: { vendor, vendorname, designid, designcolor },
+    data: { vendor, vendorname, designid, designcolor, collection },
     reloadInitPage,
 }) {
     const [vendorListOptions, setVendorListOptions] = useState([]);
@@ -197,7 +197,7 @@ function SkuTransfer({
     useEffect(() => {
         const controller = new AbortController();
 
-        const fetchOptionDetail = async (vnd, did, clr, newVnd) => {
+        const fetchOptionDetail = async (vnd, did, clr, newVnd, col) => {
             setTransferOptionLoading(true);
             setHasError(false);
             setErrorMessage("");
@@ -210,6 +210,7 @@ function SkuTransfer({
                     designid: did,
                     designcolor: clr,
                     search: newVnd,
+                    collection: col,
                     action: "GETTRANSFERDATAV2",
                 },
                 headers: {
@@ -236,7 +237,13 @@ function SkuTransfer({
         };
 
         if (transferToVendor && transferToVendor > 0) {
-            fetchOptionDetail(vendor, designid, designcolor, transferToVendor);
+            fetchOptionDetail(
+                vendor,
+                designid,
+                designcolor,
+                transferToVendor,
+                collection
+            );
 
             document
                 .querySelector(".modal")
@@ -262,6 +269,7 @@ function SkuTransfer({
         designcolor,
         transferToVendor,
         reloadTransferToVendorTab,
+        collection,
     ]);
 
     useEffect(() => {
