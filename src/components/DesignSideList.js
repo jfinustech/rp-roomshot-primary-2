@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { FiX } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiGlobe, FiTarget, FiX } from "react-icons/fi";
 import styles from "../styles/modules/sideSection.module.scss";
 import { createId } from "../aux/Helper";
+import { Tooltip } from "bootstrap";
 
 function DesignSideList({ Items, handleItem, id }) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -33,6 +34,14 @@ function DesignSideList({ Items, handleItem, id }) {
         }, 3000);
     };
 
+    useEffect(() => {
+        const uniqueicons = document.querySelectorAll(".unique-icons");
+        uniqueicons.forEach((icon) => {
+            new Tooltip(icon);
+            // if (btnTransferRef.current) new Tooltip(btnTransferRef.current);
+        });
+    }, [Items]);
+
     if (!Items || Items.length <= 0)
         return (
             <small className="text-muted d-block text-center">No Item.</small>
@@ -50,6 +59,27 @@ function DesignSideList({ Items, handleItem, id }) {
                             className="p-2 text-center cursor-zoom-in"
                             onClick={handleFindItem}
                         >
+                            <span
+                                className={`d-flex justify-content-center align-items-center rounded rounded-pill ${styles.imgIconUnique}`}
+                            >
+                                {item.is_unique ? (
+                                    <FiTarget
+                                        className="text-info unique-icons"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-html="true"
+                                        data-bs-title={`<small>This image belongs to ${item.brand} only</small>`}
+                                    />
+                                ) : (
+                                    <FiGlobe
+                                        className="text-danger unique-icons"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-html="true"
+                                        data-bs-title={`<small>This image assigned to <br />multiple brands.</small>`}
+                                    />
+                                )}
+                            </span>
                             <img src={item.imgThumb} alt={item.designShape} />
                         </div>
                         <div className="position-relative">

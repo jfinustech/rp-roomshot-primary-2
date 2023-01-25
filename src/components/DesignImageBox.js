@@ -125,7 +125,7 @@ function DesignImageBox({
                             <button
                                 className={`flex-fill py-1 btn btn-outline-danger btn-sm rounded-1`}
                                 onClick={() => handleSoftDelete(image)}
-                                disabled={isPrimary || isShape !== null}
+                                //disabled={isPrimary || isShape !== null}
                             >
                                 Delete
                             </button>
@@ -137,7 +137,7 @@ function DesignImageBox({
                                     style={{ width: 31, height: 31 }}
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
-                                    disabled={isPrimary || isShape !== null}
+                                    //disabled={isPrimary || isShape !== null}
                                 >
                                     <FiTrash2 />
                                 </button>
