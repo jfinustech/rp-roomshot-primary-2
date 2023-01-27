@@ -82,7 +82,6 @@ function Login() {
                                     className="form-label user-select-none text-secondary"
                                 >
                                     Username
-                                    {`${isLoggedIn}`}
                                 </label>
                                 <input
                                     type="text"
