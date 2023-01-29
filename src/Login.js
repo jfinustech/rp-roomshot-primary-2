@@ -11,7 +11,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const { isLoggedIn, dispatchLogin } = useContext(MainContext);
+    const { dispatchLogin } = useContext(MainContext);
 
     useEffect(() => {
         const randomImage = () => {

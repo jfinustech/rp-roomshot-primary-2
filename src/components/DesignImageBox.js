@@ -22,7 +22,7 @@ function DesignImageBox({
     const [isPrimary, setIsPrimary] = useState(image.is_primary);
     const [isDeleted, setIsDeleted] = useState(!image.show_image);
     const [isShape, setIsShape] = useState(image.designShape ?? null);
-    const { hideDeleted, hideAssigned } = useContext(MainContext);
+    const { hideDeleted, hideAssigned, galleryMode } = useContext(MainContext);
     const [dropdownId] = useState(createId(10));
 
     useEffect(() => {
@@ -56,9 +56,11 @@ function DesignImageBox({
 
     return (
         <div
-            className={`mainListImageWrapper flex-grow-1 border position-relative p-3 rounded-1 ${
-                styles.imabeBoxWrapper
-            } ${
+            className={`mainListImageWrapper flex-grow-1 border position-relative ${
+                galleryMode ? "p-0" : "p-3"
+            } rounded-1 ${styles.imabeBoxWrapper}
+            ${galleryMode ? styles.imabeBoxWrapperGalleryMode : ""}
+            ${
                 isPrimary
                     ? styles.borderInfo
                     : isShape
@@ -69,17 +71,47 @@ function DesignImageBox({
             }`}
         >
             <div className="row">
-                <div className="col-6">
+                <div
+                    className={`${
+                        galleryMode
+                            ? "col-12 position-relative overflow-hidden"
+                            : "col-6"
+                    }`}
+                >
                     <img
-                        src={image.imgThumb}
+                        src={galleryMode ? image.imgLarge : image.imgThumb}
                         alt={image.designID}
                         className={`mainListImage rounded-1 cursor-pointer ${
-                            styles.imabeBoxImage
+                            galleryMode
+                                ? styles.imabeBoxImageGalleryMode
+                                : styles.imabeBoxImage
                         } ${isDeleted ? styles.deleted : ""}`}
                         onClick={(e) => ImagePup(image.imgThumb)}
                     />
+
+                    {galleryMode && (
+                        <div className={styles.galleryModeAction}>
+                            {isDeleted && (
+                                <button
+                                    className={`py-0 px-2 btn btn-success btn-sm rounded-1 ${styles.galleryModeActionBtn}`}
+                                    onClick={() => handleSoftDelete(image)}
+                                >
+                                    Resume
+                                </button>
+                            )}
+                            {!isDeleted && (
+                                <button
+                                    className={`py-0 px-2 btn btn-danger text-white btn-sm rounded-1 ${styles.galleryModeActionBtn}`}
+                                    onClick={() => handleSoftDelete(image)}
+                                    disabled={isPrimary || isShape !== null}
+                                >
+                                    Soft Delete
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
-                <div className="col-6">
+                <div className={`col-6 ${galleryMode ? "d-none" : ""}`}>
                     <div className="d-flex flex-column gap-2">
                         <button
                             className={`py-1 btn btn-sm rounded-1 ${
@@ -127,7 +159,7 @@ function DesignImageBox({
                                 onClick={() => handleSoftDelete(image)}
                                 //disabled={isPrimary || isShape !== null}
                             >
-                                Delete
+                                Soft Delete
                             </button>
 
                             <div className="dropdown dropstart droptop">

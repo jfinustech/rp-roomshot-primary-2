@@ -2,7 +2,7 @@ import { useEffect, useRef, useContext } from "react";
 import { MainContext } from "./MainContext";
 import { Tooltip } from "bootstrap";
 import styles from "../styles/modules/designSectionAction.module.scss";
-import { FiTrash2, FiCopy } from "react-icons/fi";
+import { FiTrash2, FiCopy, FiGrid } from "react-icons/fi";
 import UploadFile from "./UploadFile";
 import { HandleModal } from "../aux/HandleModal";
 
@@ -22,6 +22,8 @@ function DesignSectionAction({
         dispatchHideDelete,
         hideAssigned,
         dispatchHideAssigned,
+        galleryMode,
+        dispatchGalleryMode,
     } = useContext(MainContext);
 
     const btnDeleteRef = useRef();
@@ -48,8 +50,13 @@ function DesignSectionAction({
     // console.log(tooltip);
 
     useEffect(() => {
-        new Tooltip(btnDeleteRef.current);
-        if (btnTransferRef.current) new Tooltip(btnTransferRef.current);
+        // new Tooltip(btnDeleteRef.current);
+        // if (btnTransferRef.current) new Tooltip(btnTransferRef.current);
+
+        const btns = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        btns.forEach((btn) => {
+            new Tooltip(btn);
+        });
     }, []);
 
     return (
@@ -100,8 +107,24 @@ function DesignSectionAction({
                     </label>
                 </div>
                 <button
+                    className={`ms-auto btn border border text-muted rounded-1 py-1 px-4 ${
+                        styles.btnGallery
+                    } ${galleryMode ? styles.active : ""}`}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Gallery Mode"
+                    onClick={() =>
+                        dispatchGalleryMode({
+                            type: "TOGGLE_GALLERY_MODE",
+                            payload: !galleryMode,
+                        })
+                    }
+                >
+                    <FiGrid />
+                </button>
+                <button
                     ref={btnDeleteRef}
-                    className={`ms-auto btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
+                    className={`btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
                     data-bs-title="This will delete all images that are not assigned as primary or

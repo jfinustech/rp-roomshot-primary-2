@@ -57,6 +57,16 @@ const handleToggleImagePop = (state, action) => {
             return state;
     }
 };
+const handleGalleryMode = (state, action) => {
+    switch (action.type) {
+        case "TOGGLE_GALLERY_MODE":
+            const payload = action.payload;
+            localStorage.setItem("galleryMode", payload);
+            return payload;
+        default:
+            return state;
+    }
+};
 
 const MainContextProvider = (props) => {
     const current_login_state =
@@ -87,6 +97,11 @@ const MainContextProvider = (props) => {
         localStorage.getItem("imagePop") ?? false
     );
 
+    const [galleryMode, dispatchGalleryMode] = useReducer(
+        handleGalleryMode,
+        localStorage.getItem("galleryMode") ?? false
+    );
+
     const contextValues = {
         isLoggedIn,
         dispatchLogin,
@@ -98,6 +113,8 @@ const MainContextProvider = (props) => {
         dispatchHideAssigned,
         toggleImagePop,
         dispatchToggleImagePop,
+        galleryMode,
+        dispatchGalleryMode,
     };
 
     return (

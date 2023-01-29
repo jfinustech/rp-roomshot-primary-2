@@ -6,7 +6,8 @@
     }
 }
 
-.btnDeleteAll {
+.btnDeleteAll,
+.btnGallery {
     span {
         overflow-x: hidden;
         width: 0;
@@ -24,6 +25,17 @@
 
         svg {
             color: white !important;
+        }
+    }
+
+    &.active {
+        background: $info;
+        color: $white !important;
+        border-color: $info !important;
+
+        &:hover {
+            color: #09adce;
+            border-color: #09adce;
         }
     }
 }

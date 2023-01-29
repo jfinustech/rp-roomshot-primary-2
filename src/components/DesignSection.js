@@ -1,6 +1,5 @@
-import React from "react";
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import styles from "../styles/modules/designSection.module.scss";
 import DesignImageBox from "./DesignImageBox";
 import DesignSectionAction from "./DesignSectionAction";
@@ -14,6 +13,7 @@ import { SetHardDelete, SetHardDeleteBulk } from "../aux/SetHardDelete";
 import { HandleModal } from "../aux/HandleModal";
 import { hydrateRoot } from "react-dom/client";
 import DesignVendorTabs from "./DesignVendorTabs";
+import { MainContext } from "./MainContext";
 
 const VIEW_URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 
@@ -27,6 +27,8 @@ function DesignSection({ design, reloadInitPage }) {
     const collapseBtnRef = useRef();
     const [primaryList, setPrimaryList] = useState([]);
     const [shapeList, setShapeList] = useState([]);
+
+    const { galleryMode } = useContext(MainContext);
 
     const handleCollapseSection = (e) => {
         const isCollapsed = sectionRef.current.classList.contains(
@@ -314,9 +316,13 @@ function DesignSection({ design, reloadInitPage }) {
                     </div>
                 )}
                 {/* {!isLoading && ( */}
-                <div className="d-flex justify-content-start align-items-start gap-0">
+                <div
+                    className={`d-flex justify-content-start align-items-start gap-0`}
+                >
                     <div
-                        className={`border-end align-self-stretch d-flex align-items-start flex-column flex-shrink-0 ${styles.sideSection}`}
+                        className={`border-end align-self-stretch align-items-start flex-column flex-shrink-0 ${
+                            styles.sideSection
+                        } ${galleryMode ? "d-none" : "d-flex"}`}
                     >
                         <div className="sticky sticky-top w-100">
                             <h6
@@ -347,7 +353,9 @@ function DesignSection({ design, reloadInitPage }) {
                         </div>
                     </div>
                     <div
-                        className={`border-end align-self-stretch d-flex align-items-start flex-column flex-shrink-0 ${styles.sideSection}`}
+                        className={`border-end align-self-stretch align-items-start flex-column flex-shrink-0 ${
+                            styles.sideSection
+                        } ${galleryMode ? "d-none" : "d-flex"}`}
                     >
                         <div className="sticky sticky-top w-100">
                             <h6
@@ -433,7 +441,7 @@ function DesignSection({ design, reloadInitPage }) {
                                 handleUploadResponse={handleUploadResponse}
                                 reloadInitPage={reloadInitPage}
                             />
-                            <div className="align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-4">
+                            <div className="align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-2">
                                 {images.length > 0 &&
                                     images?.map((image) => (
                                         <DesignImageBox
