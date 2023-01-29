@@ -78,17 +78,6 @@ function DesignImageBox({
                             : "col-6"
                     }`}
                 >
-                    <img
-                        src={galleryMode ? image.imgLarge : image.imgThumb}
-                        alt={image.designID}
-                        className={`mainListImage rounded-1 cursor-pointer ${
-                            galleryMode
-                                ? styles.imabeBoxImageGalleryMode
-                                : styles.imabeBoxImage
-                        } ${isDeleted ? styles.deleted : ""}`}
-                        onClick={(e) => ImagePup(image.imgThumb)}
-                    />
-
                     {galleryMode && (
                         <div className={styles.galleryModeAction}>
                             {isDeleted && (
@@ -103,13 +92,22 @@ function DesignImageBox({
                                 <button
                                     className={`py-0 px-2 btn btn-danger text-white btn-sm rounded-1 ${styles.galleryModeActionBtn}`}
                                     onClick={() => handleSoftDelete(image)}
-                                    disabled={isPrimary || isShape !== null}
                                 >
                                     Soft Delete
                                 </button>
                             )}
                         </div>
                     )}
+                    <img
+                        src={galleryMode ? image.imgLarge : image.imgThumb}
+                        alt={image.designID}
+                        className={`mainListImage rounded-1 cursor-pointer ${
+                            galleryMode
+                                ? styles.imabeBoxImageGalleryMode
+                                : styles.imabeBoxImage
+                        } ${isDeleted ? styles.deleted : ""}`}
+                        onClick={(e) => ImagePup(image.imgThumb)}
+                    />
                 </div>
                 <div className={`col-6 ${galleryMode ? "d-none" : ""}`}>
                     <div className="d-flex flex-column gap-2">
