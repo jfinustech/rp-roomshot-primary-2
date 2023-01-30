@@ -18,6 +18,7 @@ function DesignImageBox({
     handleSoftDelete,
     handleHardDelete,
     handleHardDeleteBulk,
+    rerender,
 }) {
     const [isPrimary, setIsPrimary] = useState(image.is_primary);
     const [isDeleted, setIsDeleted] = useState(!image.show_image);
@@ -85,6 +86,7 @@ function DesignImageBox({
     }, [image.is_primary, image.show_image, image.designShape, image]);
 
     useEffect(() => {
+        // console.log(image);
         // let act = undefined;
         // const btn = document.getElementById(dropdownId);
         const btns = document.querySelectorAll(`[data-id="${dropdownId}"]`);
@@ -113,7 +115,7 @@ function DesignImageBox({
             });
             // }
         };
-    }, [dropdownId, image.show_image, galleryMode]);
+    }, [dropdownId, image, image.show_image, galleryMode, rerender]);
 
     return (
         <div

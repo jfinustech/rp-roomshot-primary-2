@@ -454,6 +454,7 @@ function DesignSection({ design, reloadInitPage }) {
                                             handleHardDeleteBulk={
                                                 handleHardDeleteBulk
                                             }
+                                            rerender={Math.random()}
                                         />
                                     ))}
                             </div>
