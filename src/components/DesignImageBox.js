@@ -25,6 +25,59 @@ function DesignImageBox({
     const { hideDeleted, hideAssigned, galleryMode } = useContext(MainContext);
     const [dropdownId] = useState(createId(10));
 
+    const HardDeleteBtn = () => (
+        <div className="dropdown dropstart droptop">
+            <button
+                // id={dropdownId}
+                className={`p-0 m-0 btn btn-outline-danger btn-sm rounded-1 border-0 rounded rounded-pill d-flex justify-content-center align-items-center ${styles.menucaller}`}
+                data-id={dropdownId}
+                style={{ width: 31, height: 31 }}
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                //disabled={isPrimary || isShape !== null}
+            >
+                <FiTrash2 />
+            </button>
+
+            <ul
+                className="dropdown-menu"
+                style={{
+                    top: "-20px",
+                }}
+            >
+                <li>
+                    <small className="m-0 py-1 px-3">Are you sure?</small>
+                </li>
+                <li>
+                    <hr className="dropdown-divider" />
+                </li>
+                <li>
+                    <button
+                        className="dropdown-item d-flex justify-content-start align-items-center gap-2 me-5"
+                        onClick={() => handleHardDelete(image)}
+                    >
+                        <FiTrash2 className="text-danger" />
+                        <small>{`${image.brand} Only`}</small>
+                        <FiArrowRight className="ms-auto text-muted" />
+                    </button>
+                </li>
+                <li>
+                    <hr className="dropdown-divider" />
+                </li>
+                <li>
+                    <button
+                        className="dropdown-item d-flex justify-content-start align-items-center gap-2 me-5"
+                        onClick={() => handleHardDeleteBulk(image)}
+                    >
+                        <FiTrash2 className="text-danger" />
+                        <small>Delete For All Brands</small>
+                        <FiArrowRight className="ms-auto text-muted" />
+                    </button>
+                </li>
+            </ul>
+        </div>
+    );
+
     useEffect(() => {
         setIsPrimary(image.is_primary);
         setIsDeleted(!image.show_image);
@@ -32,15 +85,22 @@ function DesignImageBox({
     }, [image.is_primary, image.show_image, image.designShape, image]);
 
     useEffect(() => {
-        let act = undefined;
-        const btn = document.getElementById(dropdownId);
+        // let act = undefined;
+        // const btn = document.getElementById(dropdownId);
+        const btns = document.querySelectorAll(`[data-id="${dropdownId}"]`);
+
+        // console.log(`.${dropdownId}`);
         try {
             // if (btn) {
-            act = new Dropdown(btn, {
-                autoClose: true,
-                offset: "-30,5",
+            btns?.forEach((btn) => {
+                const act = new Dropdown(btn, {
+                    autoClose: true,
+                    offset: "-30,5",
+                });
+                btn.addEventListener("click", (e) => {
+                    act.toggle();
+                });
             });
-            btn.addEventListener("click", () => act.show());
             // }
         } catch (err) {
             console.log(err.message);
@@ -48,11 +108,12 @@ function DesignImageBox({
 
         return () => {
             // if (btn) {
-            btn.removeEventListener("click", () => act.show());
-            act.dispose();
+            btns?.forEach((btn) => {
+                btn.removeEventListener("click", undefined);
+            });
             // }
         };
-    }, [dropdownId, image.show_image]);
+    }, [dropdownId, image.show_image, galleryMode]);
 
     return (
         <div
@@ -73,30 +134,33 @@ function DesignImageBox({
             <div className="row">
                 <div
                     className={`${
-                        galleryMode
-                            ? "col-12 position-relative overflow-hidden"
-                            : "col-6"
+                        galleryMode ? "col-12 position-relative" : "col-6"
                     }`}
                 >
                     {galleryMode && (
-                        <div className={styles.galleryModeAction}>
-                            {isDeleted && (
-                                <button
-                                    className={`py-0 px-2 btn btn-success btn-sm rounded-1 ${styles.galleryModeActionBtn}`}
-                                    onClick={() => handleSoftDelete(image)}
-                                >
-                                    Resume
-                                </button>
-                            )}
-                            {!isDeleted && (
-                                <button
-                                    className={`py-0 px-2 btn btn-danger text-white btn-sm rounded-1 ${styles.galleryModeActionBtn}`}
-                                    onClick={() => handleSoftDelete(image)}
-                                >
-                                    Soft Delete
-                                </button>
-                            )}
-                        </div>
+                        <>
+                            <div className={styles.galleryModeAction}>
+                                {isDeleted && (
+                                    <button
+                                        className={`py-0 px-2 btn btn-success btn-sm rounded-1 ${styles.galleryModeActionBtn}`}
+                                        onClick={() => handleSoftDelete(image)}
+                                    >
+                                        Resume
+                                    </button>
+                                )}
+                                {!isDeleted && (
+                                    <button
+                                        className={`py-0 px-2 btn btn-danger text-white btn-sm rounded-1 ${styles.galleryModeActionBtn}`}
+                                        onClick={() => handleSoftDelete(image)}
+                                    >
+                                        Soft Delete
+                                    </button>
+                                )}
+                            </div>
+                            <div className={styles.galleryModeActionHard}>
+                                <HardDeleteBtn />
+                            </div>
+                        </>
                     )}
                     <img
                         src={galleryMode ? image.imgLarge : image.imgThumb}
@@ -160,63 +224,7 @@ function DesignImageBox({
                                 Soft Delete
                             </button>
 
-                            <div className="dropdown dropstart droptop">
-                                <button
-                                    id={dropdownId}
-                                    className={`p-0 m-0 btn btn-outline-danger btn-sm rounded-1 border-0 rounded rounded-pill d-flex justify-content-center align-items-center`}
-                                    style={{ width: 31, height: 31 }}
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    //disabled={isPrimary || isShape !== null}
-                                >
-                                    <FiTrash2 />
-                                </button>
-
-                                <ul
-                                    className="dropdown-menu"
-                                    style={{
-                                        top: "-20px",
-                                    }}
-                                >
-                                    <li>
-                                        <small className="m-0 py-1 px-3">
-                                            Are you sure?
-                                        </small>
-                                    </li>
-                                    <li>
-                                        <hr className="dropdown-divider" />
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item d-flex justify-content-start align-items-center gap-2 me-5"
-                                            onClick={() =>
-                                                handleHardDelete(image)
-                                            }
-                                        >
-                                            <FiTrash2 className="text-danger" />
-                                            <small>
-                                                {`${image.brand} Only`}
-                                            </small>
-                                            <FiArrowRight className="ms-auto text-muted" />
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <hr className="dropdown-divider" />
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item d-flex justify-content-start align-items-center gap-2 me-5"
-                                            onClick={() =>
-                                                handleHardDeleteBulk(image)
-                                            }
-                                        >
-                                            <FiTrash2 className="text-danger" />
-                                            <small>Delete For All Brands</small>
-                                            <FiArrowRight className="ms-auto text-muted" />
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
+                            <HardDeleteBtn />
                         </div>
                     </div>
                 </div>

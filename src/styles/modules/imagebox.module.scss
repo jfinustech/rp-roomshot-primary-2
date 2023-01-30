@@ -39,8 +39,24 @@
             transition: all 0.1s ease-in-out;
         }
 
+        .galleryModeActionHard {
+            position: absolute;
+            bottom: 8px;
+            right: 20px;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.1s ease-in-out;
+            .menucaller {
+                background: $danger !important;
+                color: $white;
+            }
+        }
+
         &:hover {
             .galleryModeAction {
+                opacity: 1;
+            }
+            .galleryModeActionHard {
                 opacity: 1;
             }
         }
