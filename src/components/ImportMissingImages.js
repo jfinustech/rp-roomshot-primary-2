@@ -32,6 +32,7 @@ function ImportMissingImages({
     const fetchImageImages = async () => {
         setIsLoadingImages(true);
         setHasErrorImages(false);
+        setHasImageToTransfer(false);
 
         await axios({
             method: "POST",
@@ -124,6 +125,7 @@ function ImportMissingImages({
     useEffect(() => {
         const fetchInitPage = async () => {
             setIsLoading(true);
+            setHasImageToTransfer(false);
             // setImageData([]);
             await axios({
                 method: "GET",
