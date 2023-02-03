@@ -12,7 +12,7 @@ function ImportMissingImagesImage({
                     : ""
             }`}
             style={{
-                backgroundImage: `url('rp-roomshot-primary-2/images/spinner2.gif')`,
+                backgroundImage: `url('images/spinner2.gif')`,
             }}
             onClick={handleSelectedImages}
         >
