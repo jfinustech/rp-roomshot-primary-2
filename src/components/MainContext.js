@@ -95,12 +95,16 @@ const MainContextProvider = (props) => {
     );
     const [toggleImagePop, dispatchToggleImagePop] = useReducer(
         handleToggleImagePop,
-        localStorage.getItem("imagePop") ?? false
+        localStorage.getItem("imagePop")
+            ? JSON.parse(localStorage.getItem("imagePop"))
+            : false
     );
 
     const [galleryMode, dispatchGalleryMode] = useReducer(
         handleGalleryMode,
-        localStorage.getItem("galleryMode") ?? false
+        localStorage.getItem("galleryMode")
+            ? JSON.parse(localStorage.getItem("galleryMode"))
+            : false
     );
 
     const contextValues = {

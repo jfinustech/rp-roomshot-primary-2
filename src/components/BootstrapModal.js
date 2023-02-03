@@ -1,5 +1,6 @@
 import DesignSideModal from "./DesignSideModal";
 import SkuTransfer from "./SkuTransfer";
+import ImportMissingImages from "./ImportMissingImages";
 
 function BootstrapModal({
     title,
@@ -39,6 +40,12 @@ function BootstrapModal({
                         )}
                         {dataComponent === "SkuTransfer" && (
                             <SkuTransfer data={data} reloadInitPage={act} />
+                        )}
+                        {dataComponent === "ImportMissingImages" && (
+                            <ImportMissingImages
+                                data={data}
+                                reloadInitPage={act}
+                            />
                         )}
                     </div>
                     {/* <div className="modal-footer">

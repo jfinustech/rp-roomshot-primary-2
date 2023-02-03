@@ -2,7 +2,7 @@ import { useEffect, useRef, useContext } from "react";
 import { MainContext } from "./MainContext";
 import { Tooltip } from "bootstrap";
 import styles from "../styles/modules/designSectionAction.module.scss";
-import { FiTrash2, FiCopy, FiGrid } from "react-icons/fi";
+import { FiTrash2, FiCopy, FiGrid, FiImage } from "react-icons/fi";
 import UploadFile from "./UploadFile";
 import { HandleModal } from "../aux/HandleModal";
 
@@ -41,6 +41,27 @@ function DesignSectionAction({
                 designid,
                 designcolor,
                 collection,
+            },
+            reloadInitPage,
+            "modal-lg"
+        );
+    };
+
+    const handleGalleryModeToggle = () => {
+        dispatchGalleryMode({
+            type: "TOGGLE_GALLERY_MODE",
+            payload: !galleryMode,
+        });
+    };
+
+    const handleImortMissingImages = () => {
+        HandleModal(
+            "Import Missing Images",
+            "ImportMissingImages",
+            {
+                collection,
+                designid,
+                designcolor,
             },
             reloadInitPage,
             "modal-lg"
@@ -113,14 +134,19 @@ function DesignSectionAction({
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
                     data-bs-title="Gallery Mode"
-                    onClick={() =>
-                        dispatchGalleryMode({
-                            type: "TOGGLE_GALLERY_MODE",
-                            payload: !galleryMode,
-                        })
-                    }
+                    onClick={handleGalleryModeToggle}
                 >
                     <FiGrid />
+                </button>
+                <button
+                    ref={btnDeleteRef}
+                    className={`btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Import Missing Images"
+                    onClick={handleImortMissingImages}
+                >
+                    <FiImage />
                 </button>
                 <button
                     ref={btnDeleteRef}

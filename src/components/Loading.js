@@ -42,4 +42,13 @@ function Loading({ cover, size = null }) {
     );
 }
 
+export const loadingRaw = (
+    <div className="loadingcontainer d-flex justify-content-center align-items-center">
+        <div className="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+);
+
 export default Loading;
