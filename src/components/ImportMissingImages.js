@@ -114,7 +114,7 @@ function ImportMissingImages({
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
                     },
-                }).then((e) => console.log(e.data));
+                });
             }
         }
         setDataIsTransfering(false);
