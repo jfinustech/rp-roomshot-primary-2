@@ -191,6 +191,8 @@ function DesignSection({ design, reloadInitPage }) {
     };
 
     const handleSoftDeleteBulk = async (items = images) => {
+        if (items.length <= 0) return alert("No item to delete.");
+
         initLoadingElement();
 
         const bulklist = images.filter(
