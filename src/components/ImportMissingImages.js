@@ -11,8 +11,8 @@ const IMAGE_RECORD_URL =
     "https://sandbx.rugpal.com/office/jay/v2/upload_fetch/";
 
 function ImportMissingImages({
-    data: { collection, designid, designcolor },
-    reloadInitPage,
+    data: { vendor, vendorname, collection, designid, designcolor },
+    handleChangeVendor,
 }) {
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
@@ -26,7 +26,8 @@ function ImportMissingImages({
     const [hasImageToTransfer, setHasImageToTransfer] = useState(false);
 
     const [dataIsTransfering, setDataIsTransfering] = useState(false);
-
+    const [hasErrorTransferingImages, setHasErrorTransferingImages] =
+        useState(false);
     const [refetch, setRefetch] = useState();
 
     const fetchImageImages = async () => {
@@ -100,6 +101,7 @@ function ImportMissingImages({
         if (!hasImageToTransfer)
             return alert("Select at least one images to transfer.");
         setDataIsTransfering(true);
+        setHasErrorTransferingImages(false);
         for await (let item of imageData.images) {
             if (item.selected) {
                 await axios({
@@ -115,11 +117,21 @@ function ImportMissingImages({
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
                     },
+                }).catch((err) => {
+                    setErrorMessage(err);
+                    setHasErrorTransferingImages(true);
                 });
             }
         }
         setDataIsTransfering(false);
-        reloadInitPage(Math.random());
+        handleChangeVendor(
+            vendor,
+            vendorname,
+            designid,
+            designcolor,
+            collection,
+            true
+        );
         // document.querySelector("[data-bs-dismiss]").click();
     };
     useEffect(() => {
@@ -243,6 +255,11 @@ function ImportMissingImages({
 
                                     {hasErrorImages && (
                                         <p className="text-danger mt-2">
+                                            <small>{errorMessage}</small>
+                                        </p>
+                                    )}
+                                    {hasErrorTransferingImages && (
+                                        <p className="text-danger my-2">
                                             <small>{errorMessage}</small>
                                         </p>
                                     )}

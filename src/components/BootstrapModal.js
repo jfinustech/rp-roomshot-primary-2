@@ -44,7 +44,7 @@ function BootstrapModal({
                         {dataComponent === "ImportMissingImages" && (
                             <ImportMissingImages
                                 data={data}
-                                reloadInitPage={act}
+                                handleChangeVendor={act}
                             />
                         )}
                     </div>

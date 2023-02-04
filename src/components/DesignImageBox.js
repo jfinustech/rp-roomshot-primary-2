@@ -18,6 +18,8 @@ function DesignImageBox({
     handleSoftDelete,
     handleHardDelete,
     handleHardDeleteBulk,
+    handleHardDeleteAll,
+    handleHardDeleteBulkAll,
     rerender,
 }) {
     const [isPrimary, setIsPrimary] = useState(image.is_primary);
@@ -58,10 +60,21 @@ function DesignImageBox({
                         onClick={() => handleHardDelete(image)}
                     >
                         <FiTrash2 className="text-danger" />
-                        <small>{`${image.brand} Only`}</small>
+                        <small>{`Selected Image in ${image.brand} Only`}</small>
                         <FiArrowRight className="ms-auto text-muted" />
                     </button>
                 </li>
+                <li>
+                    <hr className="dropdown-divider" />
+                </li>
+                <button
+                    className="dropdown-item d-flex justify-content-start align-items-center gap-2 me-5"
+                    onClick={() => handleHardDeleteAll(image)}
+                >
+                    <FiTrash2 className="text-danger" />
+                    <small>{`All Images From ${image.brand} Only`}</small>
+                    <FiArrowRight className="ms-auto text-muted" />
+                </button>
                 <li>
                     <hr className="dropdown-divider" />
                 </li>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useContext } from "react";
 import { MainContext } from "./MainContext";
 import { Tooltip } from "bootstrap";
 import styles from "../styles/modules/designSectionAction.module.scss";
-import { FiTrash2, FiCopy, FiGrid, FiImage } from "react-icons/fi";
+import { FiTrash2, FiCopy, FiGrid, FiImage, FiPlus } from "react-icons/fi";
 import UploadFile from "./UploadFile";
 import { HandleModal } from "../aux/HandleModal";
 
@@ -15,6 +15,7 @@ function DesignSectionAction({
     collection,
     handleUploadResponse,
     reloadInitPage,
+    handleChangeVendor,
 }) {
     const randomid = Math.floor(Math.random() * 99999);
     const {
@@ -59,11 +60,13 @@ function DesignSectionAction({
             "Import Missing Images",
             "ImportMissingImages",
             {
+                vendor,
+                vendorname,
                 collection,
                 designid,
                 designcolor,
             },
-            reloadInitPage,
+            handleChangeVendor,
             "modal-lg"
         );
     };
@@ -146,6 +149,7 @@ function DesignSectionAction({
                     data-bs-title="Import Missing Images"
                     onClick={handleImortMissingImages}
                 >
+                    <FiPlus />
                     <FiImage />
                 </button>
                 <button

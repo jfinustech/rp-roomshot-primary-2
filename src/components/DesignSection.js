@@ -11,9 +11,9 @@ import { SetPrimary } from "../aux/SetPrimary";
 import { SetSoftDelete } from "../aux/SetSoftDelete";
 import { SetHardDelete, SetHardDeleteBulk } from "../aux/SetHardDelete";
 import { HandleModal } from "../aux/HandleModal";
-import { hydrateRoot } from "react-dom/client";
 import DesignVendorTabs from "./DesignVendorTabs";
 import { MainContext } from "./MainContext";
+import { initLoadingElement, removeLoadingElement } from "./LoadingElement";
 
 const VIEW_URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 
@@ -65,8 +65,15 @@ function DesignSection({ design, reloadInitPage }) {
         collectionname: design.collectionName,
     });
 
-    const handleChangeVendor = (vid, vname, did, didcolor, didcollection) => {
-        if (designFilter.vendor === parseInt(vid)) return;
+    const handleChangeVendor = (
+        vid,
+        vname,
+        did,
+        didcolor,
+        didcollection,
+        force = false
+    ) => {
+        if (designFilter.vendor === parseInt(vid) && !force) return;
         const didfilter = designFilter;
         didfilter.vendor = parseInt(vid);
         didfilter.vendorname = vname;
@@ -81,28 +88,31 @@ function DesignSection({ design, reloadInitPage }) {
     const getPrimaryList = (items) => {
         let primaries = null;
         try {
-            primaries = items.filter((e) => e.is_primary && e.show_image);
+            if (items) {
+                primaries = items?.filter((e) => e.is_primary && e.show_image);
+                setPrimaryList(primaries);
+            }
         } catch (er) {
             console.error(er);
         }
-        setPrimaryList(primaries);
     };
 
     const getShapeList = (items) => {
         let selectedShapes = null;
         try {
-            selectedShapes = items.filter(
-                (e) =>
-                    e.designShape !== null &&
-                    e.designShape !== "" &&
-                    e.show_image &&
-                    !e.is_primary
-            );
+            if (items) {
+                selectedShapes = items.filter(
+                    (e) =>
+                        e.designShape !== null &&
+                        e.designShape !== "" &&
+                        e.show_image &&
+                        !e.is_primary
+                );
+                setShapeList(selectedShapes);
+            }
         } catch (er) {
             console.error(er);
         }
-
-        setShapeList(selectedShapes);
     };
 
     const handleShape = async (item, shape = null) => {
@@ -181,13 +191,7 @@ function DesignSection({ design, reloadInitPage }) {
     };
 
     const handleSoftDeleteBulk = async (items = images) => {
-        const div = document.createElement("div");
-        div.id = "loadingwrapper";
-        document.querySelector("body").appendChild(div);
-        hydrateRoot(
-            document.getElementById("loadingwrapper"),
-            <Loading cover />
-        );
+        initLoadingElement();
 
         const bulklist = images.filter(
             (img) =>
@@ -195,7 +199,7 @@ function DesignSection({ design, reloadInitPage }) {
         );
 
         if (bulklist.length <= 0) {
-            div.remove();
+            removeLoadingElement();
             return;
         }
 
@@ -203,10 +207,10 @@ function DesignSection({ design, reloadInitPage }) {
             await handleSoftDelete(bulklist[key]);
         }
 
-        div.remove();
+        removeLoadingElement();
     };
 
-    const handleHardDelete = async (item) => {
+    const handleHardDelete = async (item, reload = true) => {
         const fetch = SetHardDelete(item.id);
 
         await fetch
@@ -216,19 +220,50 @@ function DesignSection({ design, reloadInitPage }) {
                     return alert("Record does not exist.");
                 }
 
-                const newImages = images.filter(
-                    (img) => parseInt(img.id) !== parseInt(item.id)
-                );
+                if (reload) {
+                    const newImages = images.filter(
+                        (img) => parseInt(img.id) !== parseInt(item.id)
+                    );
 
-                setImages(newImages);
-                getPrimaryList(newImages);
-                getShapeList(newImages);
+                    setImages(newImages);
+                    getPrimaryList(newImages);
+                    getShapeList(newImages);
+                }
             })
             .catch((er) => {
                 return alert(
                     "An error occurred. We could not process your request at the moment."
                 );
             });
+    };
+    const handleHardDeleteAll = async (items = images) => {
+        initLoadingElement();
+
+        const bulklist = images;
+
+        if (bulklist.length <= 0) {
+            removeLoadingElement();
+            return;
+        }
+
+        for await (const item of bulklist) {
+            await handleHardDelete(item, false);
+            // await console.log(item);
+        }
+
+        setImages([]);
+        getPrimaryList([]);
+        getShapeList([]);
+
+        await handleChangeVendor(
+            design.vendorID,
+            design.vendorname,
+            design.designID,
+            design.designColor,
+            design.collectionName,
+            true
+        );
+        removeLoadingElement();
     };
 
     const handleHardDeleteBulk = async (item) => {
@@ -255,6 +290,8 @@ function DesignSection({ design, reloadInitPage }) {
                 );
             });
     };
+
+    const handleHardDeleteBulkAll = async (item) => {};
 
     const handleUploadResponse = (newItem) => {
         const newImages = [...newItem, ...images];
@@ -318,6 +355,7 @@ function DesignSection({ design, reloadInitPage }) {
                 {/* {!isLoading && ( */}
                 <div
                     className={`d-flex justify-content-start align-items-start gap-0`}
+                    style={{ minHeight: "50vh" }}
                 >
                     <div
                         className={`border-end align-self-stretch align-items-start flex-column flex-shrink-0 ${
@@ -440,8 +478,12 @@ function DesignSection({ design, reloadInitPage }) {
                                 collection={designFilter.collectionname}
                                 handleUploadResponse={handleUploadResponse}
                                 reloadInitPage={reloadInitPage}
+                                handleChangeVendor={handleChangeVendor}
                             />
                             <div className="align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-2">
+                                {images.length <= 0 && (
+                                    <div>No image found.</div>
+                                )}
                                 {images.length > 0 &&
                                     images?.map((image) => (
                                         <DesignImageBox
@@ -453,6 +495,12 @@ function DesignSection({ design, reloadInitPage }) {
                                             handleHardDelete={handleHardDelete}
                                             handleHardDeleteBulk={
                                                 handleHardDeleteBulk
+                                            }
+                                            handleHardDeleteAll={
+                                                handleHardDeleteAll
+                                            }
+                                            handleHardDeleteBulkAll={
+                                                handleHardDeleteBulkAll
                                             }
                                             rerender={Math.random()}
                                         />

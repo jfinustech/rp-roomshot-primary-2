@@ -43,7 +43,12 @@ function Search() {
                     className={`form-control rounded-0 border-0 border-bottom border-end px-3 ${styles.topSearchSelect}`}
                     name="vendor"
                     onChange={(e) => {
-                        setSearchParams({});
+                        if (searchParams.get("search")) {
+                            setSearchParams({
+                                vendor: e.target.value,
+                                search: searchParams.get("search"),
+                            });
+                        }
                         dispatch({
                             type: "SET_VENDOR",
                             payload: e.target.value,
