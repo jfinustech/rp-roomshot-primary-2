@@ -484,7 +484,22 @@ function DesignSection({ design, reloadInitPage }) {
                             />
                             <div className="align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-2">
                                 {images.length <= 0 && (
-                                    <div>No image found.</div>
+                                    <div className="d-flex justify-content-center align-items-center w-100 flex-column">
+                                        <div className="border-bottom px-5">
+                                            <img
+                                                src={`${process.env.PUBLIC_URL}/images/nada.jpg`}
+                                                alt={``}
+                                                height="250"
+                                            />
+                                        </div>
+                                        <div className="mt-3 text-center">
+                                            <small className="text-muted">
+                                                No image found for{" "}
+                                            </small>
+                                            <br />
+                                            {`${design.designID} - ${design.designColor}`}
+                                        </div>
+                                    </div>
                                 )}
                                 {images.length > 0 &&
                                     images?.map((image) => (
