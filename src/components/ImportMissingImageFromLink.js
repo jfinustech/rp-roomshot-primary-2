@@ -47,7 +47,7 @@ function ImportMissingImageFromLink({
             const btn = document.createElement("button");
             btn.setAttribute("type", "button");
             btn.innerText = "Download Image";
-            btn.classList = "btn btn-outline-info mt-4";
+            btn.classList = "btn btn-outline-info mt-4 rounded-1 px-5";
             btn.onclick = (e) => handleTransferImages(e);
             imagewrapper.current.append(btn);
         } catch (error) {
