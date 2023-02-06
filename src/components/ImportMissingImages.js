@@ -4,6 +4,7 @@ import { FiDownload, FiDownloadCloud } from "react-icons/fi";
 import Loading from "./Loading";
 import styles from "../styles/modules/importMissingImages.module.scss";
 import ImportMissingImagesImage from "./ImportMissingImagesImage";
+import ImportMissingImageFromLink from "./ImportMissingImageFromLink";
 
 const URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 const IMAGE_URL = "https://sandbx.rugpal.com/office/jay/v2/images/collect.php";
@@ -24,6 +25,7 @@ function ImportMissingImages({
     const [hasErrorImages, setHasErrorImages] = useState(false);
     const [imageData, setImageData] = useState([]);
     const [hasImageToTransfer, setHasImageToTransfer] = useState(false);
+    const [activeTab, setActiveTab] = useState("direct-import");
 
     const [dataIsTransfering, setDataIsTransfering] = useState(false);
     const [hasErrorTransferingImages, setHasErrorTransferingImages] =
@@ -186,172 +188,324 @@ function ImportMissingImages({
         );
 
     return (
-        <div className={`px-3 py-2 `}>
-            {dataIsTransfering && (
-                <div
-                    className={`d-flex justify-content-center align-items-center ${styles.coverloading}`}
-                >
-                    <Loading cover />
+        <>
+            <div
+                className="border-bottom px-4 py-2 bg-light mb-3"
+                style={{ margin: "-16px -15px 0 -15px" }}
+            >
+                <div className="d-flex justify-content-between align-items-center">
+                    <p className="flex-fill text-center text-secondary p-0 m-0 border-end">
+                        DesignID: {designid}
+                    </p>
+                    <p className="flex-fill text-center text-secondary p-0 m-0 border-end">
+                        Color: {designcolor}
+                    </p>
+                    <p className="flex-fill text-center text-secondary p-0 m-0">
+                        Collection: {collection}
+                    </p>
                 </div>
-            )}
+            </div>
+            <ul className="nav nav-pills mb-0" id="pills-tab" role="tablist">
+                <li className="nav-item" role="presentation">
+                    <button
+                        className={`nav-link py-2 px-4 rounded-1 ${
+                            activeTab === "direct-import"
+                                ? "active bg-info"
+                                : "text-secondary"
+                        }`}
+                        id="direct-import-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#direct-import"
+                        type="button"
+                        role="tab"
+                        aria-controls="direct-import"
+                        aria-selected="true"
+                        onClick={(e) =>
+                            setActiveTab(e.target.getAttribute("aria-controls"))
+                        }
+                    >
+                        Direct Import
+                    </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                    <button
+                        className={`nav-link py-2 px-4 rounded-1 ${
+                            activeTab === "import-from-link"
+                                ? "active bg-info"
+                                : "text-secondary"
+                        }`}
+                        id="import-from-link-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#import-from-link"
+                        type="button"
+                        role="tab"
+                        aria-controls="import-from-link"
+                        aria-selected="false"
+                        onClick={(e) =>
+                            setActiveTab(e.target.getAttribute("aria-controls"))
+                        }
+                    >
+                        Import from Link
+                    </button>
+                </li>
+                {/* <li className="nav-item" role="presentation">
+                    <button
+                        className={`nav-link py-2 px-4 rounded-1 ${
+                            activeTab === "transfer-imported"
+                                ? "active bg-info"
+                                : "text-secondary"
+                        }`}
+                        id="transfer-imported-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#transfer-imported"
+                        type="button"
+                        role="tab"
+                        aria-controls="transfer-imported"
+                        aria-selected="false"
+                        onClick={(e) =>
+                            setActiveTab(e.target.getAttribute("aria-controls"))
+                        }
+                    >
+                        Transfer Imported
+                    </button>
+                </li> */}
+            </ul>
+            <div
+                className="tab-content pt-3 mt-3 border-top"
+                id="pills-tabContent"
+            >
+                <div
+                    className={`tab-pane fade ${
+                        activeTab === "direct-import" ? "show active" : ""
+                    }`}
+                    id="direct-import"
+                    role="tabpanel"
+                    aria-labelledby="direct-import-tab"
+                    tabIndex="0"
+                >
+                    <div className={`px-3 py-2`}>
+                        {dataIsTransfering && (
+                            <div
+                                className={`d-flex justify-content-center align-items-center ${styles.coverloading}`}
+                            >
+                                <Loading cover />
+                            </div>
+                        )}
 
-            <p className="p-0 m-0">
-                <small>Color: {designcolor}</small>
-            </p>
+                        {/* <p className="p-0 m-0">
+                            <small>Color: {designcolor}</small>
+                        </p> */}
 
-            <div className="border rounded p-4 mt-3">
-                <div className="row">
-                    <div className="col-3">
-                        <p className="p-0 m-0 mb-3">
-                            <small>Choose shape.</small>
-                        </p>
-                        <div className="d-flex justify-content-start align-items-start flex-column gap-2">
-                            {shapes.map((shape) => (
-                                <div
-                                    className="form-check cursor-pointer"
-                                    key={shape.id}
-                                >
-                                    <input
-                                        className="form-check-input cursor-pointer shapeinput"
-                                        type="checkbox"
-                                        id={shape.id}
-                                        onChange={handleSelectedShapes}
-                                        value={shape.sku}
-                                    />
-                                    <label
-                                        className="form-check-label cursor-pointer user-select-none"
-                                        htmlFor={shape.id}
-                                    >
-                                        {shape.shape}
-                                    </label>
+                        <div className="row">
+                            <div className="col-3">
+                                <p className="p-0 m-0 mb-3">
+                                    <small>Choose shape.</small>
+                                </p>
+                                <div className="d-flex justify-content-start align-items-start flex-column gap-2">
+                                    {shapes.map((shape) => (
+                                        <div
+                                            className="form-check cursor-pointer"
+                                            key={shape.id}
+                                        >
+                                            <input
+                                                className="form-check-input cursor-pointer shapeinput"
+                                                type="checkbox"
+                                                id={shape.id}
+                                                onChange={handleSelectedShapes}
+                                                value={shape.sku}
+                                            />
+                                            <label
+                                                className="form-check-label cursor-pointer user-select-none"
+                                                htmlFor={shape.id}
+                                            >
+                                                {shape.shape}
+                                            </label>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="col-9">
-                        <div className="ps-5 border-start h-100">
-                            {isLoadingImages && <Loading cover />}
-                            {!isLoadingImages && (
-                                <>
-                                    <button
-                                        disabled={shapeSelected.length <= 0}
-                                        className="btn btn-outline-primary rounded-1 pe-5"
-                                        onClick={fetchImageImages}
-                                    >
-                                        <FiDownloadCloud />
-                                        <span className="ms-2">
-                                            Fetch Images
-                                        </span>
-                                    </button>
-                                    {!hasErrorImages &&
-                                        shapeSelected.length <= 0 && (
-                                            <p className="text-muted mt-2">
-                                                <small>
-                                                    Select at least one shape to
-                                                    fetch images.
-                                                </small>
-                                            </p>
-                                        )}
+                            </div>
+                            <div className="col-9">
+                                <div className="ps-5 border-start h-100">
+                                    {isLoadingImages && <Loading cover />}
+                                    {!isLoadingImages && (
+                                        <>
+                                            <button
+                                                disabled={
+                                                    shapeSelected.length <= 0
+                                                }
+                                                className="btn btn-outline-primary rounded-1 pe-5"
+                                                onClick={fetchImageImages}
+                                            >
+                                                <FiDownloadCloud />
+                                                <span className="ms-2">
+                                                    Fetch Images
+                                                </span>
+                                            </button>
+                                            {!hasErrorImages &&
+                                                shapeSelected.length <= 0 && (
+                                                    <p className="text-muted mt-2">
+                                                        <small>
+                                                            Select at least one
+                                                            shape to fetch
+                                                            images.
+                                                        </small>
+                                                    </p>
+                                                )}
 
-                                    {hasErrorImages && (
-                                        <p className="text-danger mt-2">
-                                            <small>{errorMessage}</small>
-                                        </p>
-                                    )}
-                                    {hasErrorTransferingImages && (
-                                        <p className="text-danger my-2">
-                                            <small>{errorMessage}</small>
-                                        </p>
-                                    )}
-
-                                    {!hasErrorImages && imageData && (
-                                        <div className="mt-3">
-                                            {imageData.data === 0 && (
-                                                <p className="text-success">
-                                                    The fetch processed
-                                                    successfully but found no
-                                                    image to return.
+                                            {hasErrorImages && (
+                                                <p className="text-danger mt-2">
+                                                    <small>
+                                                        {errorMessage}
+                                                    </small>
+                                                </p>
+                                            )}
+                                            {hasErrorTransferingImages && (
+                                                <p className="text-danger my-2">
+                                                    <small>
+                                                        {errorMessage}
+                                                    </small>
                                                 </p>
                                             )}
 
-                                            {imageData.data > 0 && (
-                                                <>
-                                                    <div className="d-block border-bottom pb-2 mb-4">
-                                                        <small>
-                                                            {imageData.data}{" "}
-                                                            image found.
-                                                        </small>
-                                                    </div>
+                                            {!hasErrorImages && imageData && (
+                                                <div className="mt-3">
+                                                    {imageData.data === 0 && (
+                                                        <p className="text-success">
+                                                            The fetch processed
+                                                            successfully but
+                                                            found no image to
+                                                            return.
+                                                        </p>
+                                                    )}
 
-                                                    <div className="d-flex flex-wrap justify-content-start gap-2">
-                                                        {imageData.images
-                                                            .sort((a, b) => {
-                                                                return (
-                                                                    a.shape.toUpperCase() -
-                                                                    b.shape.toUpperCase()
-                                                                );
-                                                            })
-                                                            .map(
-                                                                (
-                                                                    image,
-                                                                    index
-                                                                ) => (
-                                                                    <ImportMissingImagesImage
-                                                                        key={
+                                                    {imageData.data > 0 && (
+                                                        <>
+                                                            <div className="d-block border-bottom pb-2 mb-4">
+                                                                <small>
+                                                                    {
+                                                                        imageData.data
+                                                                    }{" "}
+                                                                    image found.
+                                                                </small>
+                                                            </div>
+
+                                                            <div className="d-flex flex-wrap justify-content-start gap-2">
+                                                                {imageData.images
+                                                                    .sort(
+                                                                        (
+                                                                            a,
+                                                                            b
+                                                                        ) => {
+                                                                            return (
+                                                                                a.shape.toUpperCase() -
+                                                                                b.shape.toUpperCase()
+                                                                            );
+                                                                        }
+                                                                    )
+                                                                    .map(
+                                                                        (
+                                                                            image,
                                                                             index
-                                                                        }
-                                                                        image={
-                                                                            image
-                                                                        }
-                                                                        handleSelectedImages={() =>
-                                                                            handleSelectedImages(
-                                                                                index
-                                                                            )
-                                                                        }
-                                                                        refetch={
-                                                                            refetch
-                                                                        }
-                                                                    />
-                                                                )
-                                                            )}
-                                                    </div>
-                                                </>
-                                            )}
+                                                                        ) => (
+                                                                            <ImportMissingImagesImage
+                                                                                key={
+                                                                                    index
+                                                                                }
+                                                                                image={
+                                                                                    image
+                                                                                }
+                                                                                handleSelectedImages={() =>
+                                                                                    handleSelectedImages(
+                                                                                        index
+                                                                                    )
+                                                                                }
+                                                                                refetch={
+                                                                                    refetch
+                                                                                }
+                                                                            />
+                                                                        )
+                                                                    )}
+                                                            </div>
+                                                        </>
+                                                    )}
 
-                                            {imageData.data > 0 && (
-                                                <div className="d-block mt-3 pt-3 border-top d-flex justify-content-end">
-                                                    <button
-                                                        disabled={
-                                                            !hasImageToTransfer ||
-                                                            dataIsTransfering
-                                                        }
-                                                        className={`btn d-flex gap-3 align-items-center ${
-                                                            !hasImageToTransfer
-                                                                ? "btn-outline-secondary"
-                                                                : "btn-outline-success"
-                                                        }`}
-                                                        onClick={
-                                                            handleTransferImages
-                                                        }
-                                                    >
-                                                        <FiDownload />
-                                                        <span>
-                                                            {dataIsTransfering
-                                                                ? "Downloading, Please Wait..."
-                                                                : "Download Selected Images"}
-                                                        </span>
-                                                    </button>
+                                                    {imageData.data > 0 && (
+                                                        <div className="d-block mt-3 pt-3 border-top d-flex justify-content-end">
+                                                            <button
+                                                                disabled={
+                                                                    !hasImageToTransfer ||
+                                                                    dataIsTransfering
+                                                                }
+                                                                className={`btn d-flex gap-3 align-items-center ${
+                                                                    !hasImageToTransfer
+                                                                        ? "btn-outline-secondary"
+                                                                        : "btn-outline-success"
+                                                                }`}
+                                                                onClick={
+                                                                    handleTransferImages
+                                                                }
+                                                            >
+                                                                <FiDownload />
+                                                                <span>
+                                                                    {dataIsTransfering
+                                                                        ? "Downloading, Please Wait..."
+                                                                        : "Download Selected Images"}
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
-                                        </div>
+                                        </>
                                     )}
-                                </>
-                            )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div
+                    className={`tab-pane fade ${
+                        activeTab === "import-from-link" ? "show active" : ""
+                    }`}
+                    id="import-from-link"
+                    role="tabpanel"
+                    aria-labelledby="import-from-link-tab"
+                    tabIndex="0"
+                >
+                    <div className={`px-3 py-2`}>
+                        <ImportMissingImageFromLink
+                            vendor={vendor}
+                            vendorname={vendorname}
+                            collection={collection}
+                            designid={designid}
+                            designcolor={designcolor}
+                            imageRecordUrl={IMAGE_RECORD_URL}
+                            handleChangeVendor={handleChangeVendor}
+                        />
+                    </div>
+                </div>
+                {/* <div
+                    className={`tab-pane fade ${
+                        activeTab === "transfer-imported" ? "show active" : ""
+                    }`}
+                    id="transfer-imported"
+                    role="tabpanel"
+                    aria-labelledby="transfer-imported-tab"
+                    tabIndex="0"
+                >
+                    <div className={`px-3 py-2`}>
+                        <ImportMissingImagesTransfer
+                            vendor={vendor}
+                            vendorname={vendorname}
+                            collection={collection}
+                            designid={designid}
+                            designcolor={designcolor}
+                            handleChangeVendor={handleChangeVendor}
+                        />
+                    </div>
+                </div> */}
             </div>
-        </div>
+        </>
     );
 }
 

@@ -40,3 +40,11 @@
     z-index: 55;
     background: rgba(255, 255, 255, 0.8);
 }
+
+.singleimage_wrapper {
+    img {
+        height: 300px;
+        width: 300px;
+        object-fit: cover;
+    }
+}
