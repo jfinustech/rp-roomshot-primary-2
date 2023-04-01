@@ -68,15 +68,35 @@ function ImportMissingImages({
     };
 
     const handleSelectedShapes = (e) => {
+        const input_type = e.currentTarget.type;
         let currentlist = shapeSelected;
-        const checked = e.currentTarget.checked;
+        const checked =
+            input_type === "checkbox"
+                ? e.currentTarget.checked
+                : e.currentTarget.value !== "";
         const value = e.currentTarget.value;
+        const shapecheckboxes = document.querySelectorAll(".shapeinput");
+
+        if (input_type === "text" && checked) {
+            shapecheckboxes.forEach((e) => {
+                e.checked = false;
+                e.disabled = true;
+            });
+
+            currentlist = [value];
+        } else {
+            shapecheckboxes.forEach((e) => {
+                e.disabled = false;
+            });
+        }
 
         if (checked) {
             currentlist = [...currentlist, value];
         } else {
             currentlist.splice(currentlist.indexOf(value), 1);
         }
+
+        currentlist = [...new Set(currentlist)];
 
         setShapeSelected([...new Set(currentlist)]);
     };
@@ -99,11 +119,14 @@ function ImportMissingImages({
         //setHasImageToTransfer
     };
 
-    const handleTransferImages = async () => {
+    const handleTransferImages = async (withshape) => {
         if (!hasImageToTransfer)
             return alert("Select at least one images to transfer.");
+
         setDataIsTransfering(true);
         setHasErrorTransferingImages(false);
+        const wrapper = document.querySelector(".modal");
+
         for await (let item of imageData.images) {
             if (item.selected) {
                 await axios({
@@ -114,15 +137,19 @@ function ImportMissingImages({
                         image: item.path,
                         designid: item.did,
                         color: item.color,
-                        shape: item.shape,
+                        shape: withshape ? item.shape : "",
                     },
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
                     },
-                }).catch((err) => {
-                    setErrorMessage(err);
-                    setHasErrorTransferingImages(true);
-                });
+                })
+                    .catch((err) => {
+                        setErrorMessage(err);
+                        setHasErrorTransferingImages(true);
+                    })
+                    .finally(() => {
+                        wrapper.scroll({ top: 0, behavior: "smooth" });
+                    });
             }
         }
         setDataIsTransfering(false);
@@ -298,8 +325,18 @@ function ImportMissingImages({
 
                         <div className="row">
                             <div className="col-3">
+                                <p className="p-0 m-0 mb-1">
+                                    <small>Fetch by SKU:</small>
+                                </p>
+                                <div className="d-block mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        onChange={handleSelectedShapes}
+                                    />
+                                </div>
                                 <p className="p-0 m-0 mb-3">
-                                    <small>Choose shape.</small>
+                                    <small>Or Choose Shape:</small>
                                 </p>
                                 <div className="d-flex justify-content-start align-items-start flex-column gap-2">
                                     {shapes.map((shape) => (
@@ -430,7 +467,7 @@ function ImportMissingImages({
                                                     )}
 
                                                     {imageData.data > 0 && (
-                                                        <div className="d-block mt-3 pt-3 border-top d-flex justify-content-end">
+                                                        <div className="d-block mt-5 pt-5 mb-4 border-top d-flex justify-content-end gap-3">
                                                             <button
                                                                 disabled={
                                                                     !hasImageToTransfer ||
@@ -441,15 +478,41 @@ function ImportMissingImages({
                                                                         ? "btn-outline-secondary"
                                                                         : "btn-outline-success"
                                                                 }`}
-                                                                onClick={
-                                                                    handleTransferImages
+                                                                onClick={() =>
+                                                                    handleTransferImages(
+                                                                        false
+                                                                    )
                                                                 }
                                                             >
                                                                 <FiDownload />
                                                                 <span>
                                                                     {dataIsTransfering
                                                                         ? "Downloading, Please Wait..."
-                                                                        : "Download Selected Images"}
+                                                                        : "Download Images No Shape"}
+                                                                </span>
+                                                            </button>
+
+                                                            <button
+                                                                disabled={
+                                                                    !hasImageToTransfer ||
+                                                                    dataIsTransfering
+                                                                }
+                                                                className={`btn d-flex gap-3 align-items-center ${
+                                                                    !hasImageToTransfer
+                                                                        ? "btn-outline-secondary"
+                                                                        : "btn-outline-success"
+                                                                }`}
+                                                                onClick={() =>
+                                                                    handleTransferImages(
+                                                                        true
+                                                                    )
+                                                                }
+                                                            >
+                                                                <FiDownload />
+                                                                <span>
+                                                                    {dataIsTransfering
+                                                                        ? "Downloading, Please Wait..."
+                                                                        : "Download Images With Shape"}
                                                                 </span>
                                                             </button>
                                                         </div>
