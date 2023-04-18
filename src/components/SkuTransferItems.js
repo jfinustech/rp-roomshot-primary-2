@@ -23,15 +23,20 @@ function SkuTransferItems({
 
     const handleSelectAllSizes = (e) => {
         //Check if all design colors and ids are showing if command is pushed.
+        e.preventDefault();
+
         const shape = e.target.dataset.shape;
 
-        if (e.metaKey && isFiltered) {
+        const hasMetaKeyPress =
+            e.shiftKey || e.metaKey || e.altKey || e.ctrlKey;
+
+        if (hasMetaKeyPress && isFiltered) {
             return alert(
                 `To select all size in ${shape} shape, remove the filter from options dropdown at the top by chooseing Show All option.`
             );
         }
 
-        const container = e.metaKey
+        const container = hasMetaKeyPress
             ? e.target.closest(`.${styles.skuTransferWrapper}`)
             : e.target.closest(`.${styles.shapeContainer}`);
         const inputs = container.querySelectorAll(
