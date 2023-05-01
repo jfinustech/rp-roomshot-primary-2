@@ -104,8 +104,10 @@ function ImportMissingImages({
         if (currentlist.length === 1) {
             const sku_list =
                 shapes.filter((a) => a.sku === currentlist[0]) ?? false;
-            const skus = sku_list ? sku_list[0].skus.split(",") : [];
-            setSkuCollection(skus);
+            if (sku_list && sku_list.length) {
+                const skus = sku_list ? sku_list[0].skus.split(",") : [];
+                setSkuCollection(skus);
+            }
         } else {
             setSkuCollection(false);
         }
