@@ -33,7 +33,7 @@ function ImportMissingImages({
         useState(false);
     const [refetch, setRefetch] = useState();
 
-    const fetchImageImages = async () => {
+    const fetchImageImages = async (skuSet = false) => {
         setIsLoadingImages(true);
         setHasErrorImages(false);
         setHasImageToTransfer(false);
@@ -44,7 +44,7 @@ function ImportMissingImages({
             data: {
                 designid: designid,
                 designcolor: designcolor,
-                sku: shapeSelected,
+                sku: skuSet ? skuSet : shapeSelected,
             },
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -116,7 +116,7 @@ function ImportMissingImages({
     const handleSkuCollectionChange = (e) => {
         const new_sku = e.target.value;
         setShapeSelected([new_sku]);
-        fetchImageImages();
+        fetchImageImages([new_sku]);
     };
 
     const handleSelectedImages = (index) => {
@@ -394,8 +394,8 @@ function ImportMissingImages({
                                                             0
                                                         }
                                                         className="btn btn-outline-primary rounded-1 pe-5"
-                                                        onClick={
-                                                            fetchImageImages
+                                                        onClick={() =>
+                                                            fetchImageImages()
                                                         }
                                                     >
                                                         <FiDownloadCloud />
@@ -417,9 +417,7 @@ function ImportMissingImages({
                                                             </p>
                                                         )}
                                                 </span>
-                                                {!hasErrorImages &&
-                                                    shapeSelected.length ===
-                                                        1 &&
+                                                {shapeSelected.length === 1 &&
                                                     skuCollection && (
                                                         <div className="d-block">
                                                             <select
@@ -460,7 +458,9 @@ function ImportMissingImages({
                                             {hasErrorImages && (
                                                 <p className="text-danger mt-2">
                                                     <small>
-                                                        {errorMessage}
+                                                        {errorMessage === 0
+                                                            ? "No Image Found. Try another SKU"
+                                                            : errorMessage}
                                                     </small>
                                                 </p>
                                             )}
