@@ -20,6 +20,7 @@ function ImportMissingImages({
     const [errorMessage, setErrorMessage] = useState("");
     const [shapes, setShapes] = useState([]);
     const [shapeSelected, setShapeSelected] = useState([]);
+    const [skuCollection, setSkuCollection] = useState(false);
 
     const [isLoadingImages, setIsLoadingImages] = useState(false);
     const [hasErrorImages, setHasErrorImages] = useState(false);
@@ -99,6 +100,21 @@ function ImportMissingImages({
         currentlist = [...new Set(currentlist)];
 
         setShapeSelected([...new Set(currentlist)]);
+
+        if (currentlist.length === 1) {
+            const sku_list =
+                shapes.filter((a) => a.sku === currentlist[0]) ?? false;
+            const skus = sku_list ? sku_list[0].skus.split(",") : [];
+            setSkuCollection(skus);
+        } else {
+            setSkuCollection(false);
+        }
+    };
+
+    const handleSkuCollectionChange = (e) => {
+        const new_sku = e.target.value;
+        setShapeSelected([new_sku]);
+        fetchImageImages();
     };
 
     const handleSelectedImages = (index) => {
@@ -333,6 +349,7 @@ function ImportMissingImages({
                                         type="text"
                                         className="form-control form-control-sm"
                                         onChange={handleSelectedShapes}
+                                        id="searchSkuInputRef"
                                     />
                                 </div>
                                 <p className="p-0 m-0 mb-3">
@@ -350,6 +367,7 @@ function ImportMissingImages({
                                                 id={shape.id}
                                                 onChange={handleSelectedShapes}
                                                 value={shape.sku}
+                                                data-sku={shape.sku}
                                             />
                                             <label
                                                 className="form-check-label cursor-pointer user-select-none"
@@ -366,28 +384,76 @@ function ImportMissingImages({
                                     {isLoadingImages && <Loading cover />}
                                     {!isLoadingImages && (
                                         <>
-                                            <button
-                                                disabled={
-                                                    shapeSelected.length <= 0
-                                                }
-                                                className="btn btn-outline-primary rounded-1 pe-5"
-                                                onClick={fetchImageImages}
-                                            >
-                                                <FiDownloadCloud />
-                                                <span className="ms-2">
-                                                    Fetch Images
+                                            <div className="d-flex justify-content-between align-items-end">
+                                                <span>
+                                                    <button
+                                                        disabled={
+                                                            shapeSelected.length <=
+                                                            0
+                                                        }
+                                                        className="btn btn-outline-primary rounded-1 pe-5"
+                                                        onClick={
+                                                            fetchImageImages
+                                                        }
+                                                    >
+                                                        <FiDownloadCloud />
+                                                        <span className="ms-2">
+                                                            Fetch Images
+                                                        </span>
+                                                    </button>
+                                                    {!hasErrorImages &&
+                                                        shapeSelected.length <=
+                                                            0 && (
+                                                            <p className="text-muted mt-2">
+                                                                <small>
+                                                                    Select at
+                                                                    least one
+                                                                    shape to
+                                                                    fetch
+                                                                    images.
+                                                                </small>
+                                                            </p>
+                                                        )}
                                                 </span>
-                                            </button>
-                                            {!hasErrorImages &&
-                                                shapeSelected.length <= 0 && (
-                                                    <p className="text-muted mt-2">
-                                                        <small>
-                                                            Select at least one
-                                                            shape to fetch
-                                                            images.
-                                                        </small>
-                                                    </p>
-                                                )}
+                                                {!hasErrorImages &&
+                                                    shapeSelected.length ===
+                                                        1 &&
+                                                    skuCollection && (
+                                                        <div className="d-block">
+                                                            <select
+                                                                className="form-control mt-2"
+                                                                style={{
+                                                                    width: 183,
+                                                                }}
+                                                                defaultValue={
+                                                                    shapeSelected[0]
+                                                                }
+                                                                onChange={
+                                                                    handleSkuCollectionChange
+                                                                }
+                                                            >
+                                                                {skuCollection.map(
+                                                                    (
+                                                                        skuItem
+                                                                    ) => (
+                                                                        <option
+                                                                            key={
+                                                                                skuItem
+                                                                            }
+                                                                            value={
+                                                                                skuItem
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                skuItem
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                )}
+                                                            </select>
+                                                        </div>
+                                                    )}
+                                            </div>
 
                                             {hasErrorImages && (
                                                 <p className="text-danger mt-2">
