@@ -556,7 +556,7 @@ function SkuTransfer({
 
                     <div className="d-flex justify-content-center align-items-center gap-2">
                         {vendorListOptions
-                            ?.filter((e) => e.id !== vendor)
+                            ?.filter((e) => e.id !== vendor && e.id !== 8800)
                             .map((vnd) => (
                                 <label
                                     key={vnd.id}

@@ -163,18 +163,16 @@ function DesignSectionAction({
                 >
                     <FiTrash2 />
                 </button>
-                {parseInt(vendor) === 8800 && (
-                    <button
-                        ref={btnTransferRef}
-                        className={`btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-title="Transfer items whithin this design or collection to a new brand."
-                        onClick={handleSkuTransfer}
-                    >
-                        <FiCopy />
-                    </button>
-                )}
+                <button
+                    ref={btnTransferRef}
+                    className={`btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Transfer items whithin this design or collection to a new brand."
+                    onClick={handleSkuTransfer}
+                >
+                    <FiCopy />
+                </button>
                 <UploadFile
                     designid={designid}
                     designcolor={designcolor}
