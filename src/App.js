@@ -23,6 +23,7 @@ function App() {
         };
         setSearchParams(new_query);
         //Some note here.
+        //Second change
     };
 
     useEffect(() => {
