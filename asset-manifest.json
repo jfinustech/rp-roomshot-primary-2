@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/rp-roomshot-primary-2/static/css/main.780c8d2d.css",
-    "main.js": "/rp-roomshot-primary-2/static/js/main.fef27f07.js",
+    "main.js": "/rp-roomshot-primary-2/static/js/main.d7fb1565.js",
     "index.html": "/rp-roomshot-primary-2/index.html",
     "main.780c8d2d.css.map": "/rp-roomshot-primary-2/static/css/main.780c8d2d.css.map",
-    "main.fef27f07.js.map": "/rp-roomshot-primary-2/static/js/main.fef27f07.js.map"
+    "main.d7fb1565.js.map": "/rp-roomshot-primary-2/static/js/main.d7fb1565.js.map"
   },
   "entrypoints": [
     "static/css/main.780c8d2d.css",
-    "static/js/main.fef27f07.js"
+    "static/js/main.d7fb1565.js"
   ]
 }
