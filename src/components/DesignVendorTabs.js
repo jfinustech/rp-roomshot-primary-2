@@ -107,11 +107,16 @@ function DesignVendorTabs({
                                             vendor.name,
                                             vendor.did,
                                             vendor.didcolor,
-                                            vendor.didcollection
+                                            vendor.didcollection,
+                                            vendor.total_sku
                                         )
                                     }
                                 >
-                                    <span>{vendor.name}</span>
+                                    <span>
+                                        {vendor.name}
+                                        {" - "}
+                                        {vendor.total_sku}
+                                    </span>
                                 </button>
                             ))}
                         </div>

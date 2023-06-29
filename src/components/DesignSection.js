@@ -72,6 +72,7 @@ function DesignSection({ design, reloadInitPage }) {
         did,
         didcolor,
         didcollection,
+        totalSku,
         force = false
     ) => {
         if (designFilter.vendor === parseInt(vid) && !force) return;
@@ -81,7 +82,7 @@ function DesignSection({ design, reloadInitPage }) {
         didfilter.designid = did;
         didfilter.designcolor = didcolor;
         didfilter.collectionname = didcollection;
-
+        didfilter.total_sku = totalSku;
         setDesignFilter(didfilter);
         setReload(Math.random());
     };

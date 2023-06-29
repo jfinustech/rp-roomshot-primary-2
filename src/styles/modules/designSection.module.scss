@@ -42,7 +42,7 @@
             width: fit-content;
 
             button {
-                --tabbuttonwidth: 150px;
+                --tabbuttonwidth: 170px;
                 width: var(--tabbuttonwidth);
                 height: calc(var(--smallsidewidth) + 1px);
                 background: $gray-100;
