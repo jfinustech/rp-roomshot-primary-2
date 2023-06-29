@@ -292,7 +292,7 @@ function SkuTransfer({
                     setVendorLoading(false);
                 })
                 .catch((er) => {
-                    console.log(er.message);
+                    //console.log(er.message);
                     setVendorLoading(false);
                     setHasVendorError(true);
                     setErrorMessageVendor(er.message);
@@ -504,7 +504,7 @@ function SkuTransfer({
             })
             .catch((er) => {
                 setSuggestionLoading(false);
-                console.log(er);
+                //console.log(er);
             });
     };
 

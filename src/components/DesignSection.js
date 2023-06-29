@@ -63,6 +63,7 @@ function DesignSection({ design, reloadInitPage }) {
         vendor: design.vendorID,
         vendorname: design.vendor,
         collectionname: design.collectionName,
+        total_sku: design.total_sku,
     });
 
     const handleChangeVendor = (
@@ -135,7 +136,7 @@ function DesignSection({ design, reloadInitPage }) {
     };
 
     const handlePrimary = async (item) => {
-        console.log("callingPrimary");
+        //console.log("callingPrimary");
 
         const fetch = SetPrimary(item.id);
 
@@ -450,11 +451,17 @@ function DesignSection({ design, reloadInitPage }) {
                                             </span>{" "}
                                             {designFilter.designcolor}
                                         </p>
-                                        <p className="p-0 m-0 py-2">
+                                        <p className="p-0 m-0 py-2 pe-4 me-4 border-end">
                                             <span className="text-muted">
                                                 Brand:{" "}
                                             </span>{" "}
                                             {designFilter.vendorname}
+                                        </p>
+                                        <p className="p-0 m-0 py-2">
+                                            <span className="text-muted">
+                                                Total SKU:{" "}
+                                            </span>{" "}
+                                            {designFilter.total_sku}
                                         </p>
                                     </div>
                                 </div>

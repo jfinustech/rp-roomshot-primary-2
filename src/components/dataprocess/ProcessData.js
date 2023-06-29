@@ -53,7 +53,7 @@ function ProcessData({ data, queue, processingQueue, processingStatus }) {
                     processingStatus({ queue, status: "done" });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                     setStatus("error");
                     processingStatus({ queue, status: "done" });
                 });

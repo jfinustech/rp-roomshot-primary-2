@@ -35,6 +35,7 @@ function DesignVendorTabs({
             })
                 .then((d) => {
                     setVendorTabs(d.data);
+                    //console.log(d.data);
                     setIsLoading(false);
                     setHasError(false);
                 })
