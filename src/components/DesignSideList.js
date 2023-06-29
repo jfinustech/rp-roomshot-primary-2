@@ -3,6 +3,10 @@ import { FiGlobe, FiTarget, FiX } from "react-icons/fi";
 import styles from "../styles/modules/sideSection.module.scss";
 import { createId } from "../aux/Helper";
 import { Tooltip } from "bootstrap";
+import {
+    LazyLoadImage,
+    trackWindowScroll,
+} from "react-lazy-load-image-component";
 
 function DesignSideList({ Items, handleItem, id }) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -80,7 +84,10 @@ function DesignSideList({ Items, handleItem, id }) {
                                     />
                                 )}
                             </span>
-                            <img src={item.imgThumb} alt={item.designShape} />
+                            <LazyLoadImage
+                                src={item.imgThumb}
+                                alt={item.designShape}
+                            />
                         </div>
                         <div className="position-relative">
                             <button
@@ -106,4 +113,4 @@ function DesignSideList({ Items, handleItem, id }) {
     );
 }
 
-export default DesignSideList;
+export default trackWindowScroll(DesignSideList);

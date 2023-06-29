@@ -5,6 +5,10 @@ import { FiTrash2, FiArrowRight } from "react-icons/fi";
 import { ImagePup } from "../aux/ImagePup";
 import { Dropdown } from "bootstrap";
 import { createId } from "../aux/Helper";
+import {
+    LazyLoadImage,
+    trackWindowScroll,
+} from "react-lazy-load-image-component";
 
 // const initBootstrapDropdown = (selector) => {
 //     const dropdownElementList = document.querySelectorAll(selector)
@@ -177,7 +181,7 @@ function DesignImageBox({
                             </div>
                         </>
                     )}
-                    <img
+                    <LazyLoadImage
                         src={galleryMode ? image.imgLarge : image.imgThumb}
                         alt={image.designID}
                         className={`mainListImage rounded-1 cursor-pointer ${
@@ -248,4 +252,4 @@ function DesignImageBox({
     );
 }
 
-export default DesignImageBox;
+export default trackWindowScroll(DesignImageBox);
