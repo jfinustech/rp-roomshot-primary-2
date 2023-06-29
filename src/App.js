@@ -22,6 +22,7 @@ function App() {
             ...q,
         };
         setSearchParams(new_query);
+        //Some note here.
     };
 
     useEffect(() => {
