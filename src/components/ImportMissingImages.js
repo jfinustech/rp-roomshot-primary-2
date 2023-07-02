@@ -12,7 +12,14 @@ const IMAGE_RECORD_URL =
     "https://sandbx.rugpal.com/office/jay/v2/upload_fetch/";
 
 function ImportMissingImages({
-    data: { vendor, vendorname, collection, designid, designcolor },
+    data: {
+        vendor,
+        vendorname,
+        collection,
+        designid,
+        designcolor,
+        vendorItemCount,
+    },
     handleChangeVendor,
 }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -177,6 +184,7 @@ function ImportMissingImages({
             designid,
             designcolor,
             collection,
+            vendorItemCount,
             true
         );
         // document.querySelector("[data-bs-dismiss]").click();

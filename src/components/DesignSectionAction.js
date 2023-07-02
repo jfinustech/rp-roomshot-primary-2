@@ -16,6 +16,7 @@ function DesignSectionAction({
     handleUploadResponse,
     reloadInitPage,
     handleChangeVendor,
+    vendorItemCount,
 }) {
     const randomid = Math.floor(Math.random() * 99999);
     const {
@@ -65,6 +66,7 @@ function DesignSectionAction({
                 collection,
                 designid,
                 designcolor,
+                vendorItemCount,
             },
             handleChangeVendor,
             "modal-lg"

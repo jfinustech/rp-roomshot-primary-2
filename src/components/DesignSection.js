@@ -489,6 +489,7 @@ function DesignSection({ design, reloadInitPage }) {
                                 handleUploadResponse={handleUploadResponse}
                                 reloadInitPage={reloadInitPage}
                                 handleChangeVendor={handleChangeVendor}
+                                vendorItemCount={designFilter.vendor}
                             />
                             <div className="align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-2">
                                 {images.length <= 0 && (
