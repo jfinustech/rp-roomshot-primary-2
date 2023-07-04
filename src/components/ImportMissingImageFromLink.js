@@ -11,6 +11,7 @@ function ImportMissingImageFromLink({
     designcolor,
     imageRecordUrl,
     handleChangeVendor,
+    vendorItemCount,
 }) {
     const [imageField, setImageField] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -84,6 +85,7 @@ function ImportMissingImageFromLink({
                     designid,
                     designcolor,
                     collection,
+                    vendorItemCount,
                     true
                 );
             })

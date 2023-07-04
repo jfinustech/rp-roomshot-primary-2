@@ -620,6 +620,7 @@ function ImportMissingImages({
                             designcolor={designcolor}
                             imageRecordUrl={IMAGE_RECORD_URL}
                             handleChangeVendor={handleChangeVendor}
+                            vendorItemCount={vendorItemCount}
                         />
                     </div>
                 </div>
