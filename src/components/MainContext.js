@@ -1,5 +1,4 @@
-import { createContext, useReducer, useState } from "react";
-import Loading from "./Loading";
+import { createContext, useReducer } from "react";
 
 export const MainContext = createContext();
 

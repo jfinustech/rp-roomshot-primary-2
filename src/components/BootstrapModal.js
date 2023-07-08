@@ -1,6 +1,7 @@
 import DesignSideModal from "./DesignSideModal";
 import SkuTransfer from "./SkuTransfer";
 import ImportMissingImages from "./ImportMissingImages";
+import AddExtraColorAndDesigns from "./AddExtraColorAndDesigns";
 
 function BootstrapModal({
     title,
@@ -43,6 +44,12 @@ function BootstrapModal({
                         )}
                         {dataComponent === "ImportMissingImages" && (
                             <ImportMissingImages
+                                data={data}
+                                handleChangeVendor={act}
+                            />
+                        )}
+                        {dataComponent === "AddExtraColorAndDesigns" && (
+                            <AddExtraColorAndDesigns
                                 data={data}
                                 handleChangeVendor={act}
                             />

@@ -1,4 +1,4 @@
-export const initLoadingElement = () => {
+export const initLoadingElement = (modal = false) => {
     const existingdiv = document.querySelector("#loadingwrapper");
 
     if (existingdiv) existingdiv.remove();
@@ -20,7 +20,11 @@ export const initLoadingElement = () => {
     div2.appendChild(div3);
     div.appendChild(div2);
 
-    document.querySelector("body").appendChild(div);
+    if (modal) {
+        document.querySelector(".modal-dialog").appendChild(div);
+    } else {
+        document.querySelector("body").appendChild(div);
+    }
 };
 
 export const removeLoadingElement = () => {

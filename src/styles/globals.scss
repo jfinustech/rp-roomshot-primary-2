@@ -163,6 +163,20 @@ body {
     }
 }
 
+.modal-dialog {
+    position: relative !important;
+    #loadingwrapper {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+
+        .loadingcontainer {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
 .tooltip {
     z-index: 1040 !important;
 }

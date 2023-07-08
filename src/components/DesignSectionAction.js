@@ -2,7 +2,14 @@ import { useEffect, useRef, useContext } from "react";
 import { MainContext } from "./MainContext";
 import { Tooltip } from "bootstrap";
 import styles from "../styles/modules/designSectionAction.module.scss";
-import { FiTrash2, FiCopy, FiGrid, FiImage, FiPlus } from "react-icons/fi";
+import {
+    FiTrash2,
+    FiCopy,
+    FiGrid,
+    FiImage,
+    FiPlus,
+    FiAperture,
+} from "react-icons/fi";
 import UploadFile from "./UploadFile";
 import { HandleModal } from "../aux/HandleModal";
 
@@ -73,6 +80,28 @@ function DesignSectionAction({
         );
     };
 
+    const handleAddExtraColorsAndDesigns = (e) => {
+        const images =
+            e.target
+                .closest("section")
+                .querySelector(".gallery_wrapper_in")
+                .querySelectorAll("img.mainListImage") ?? {};
+        HandleModal(
+            "Add Extra Color & Design",
+            "AddExtraColorAndDesigns",
+            {
+                vendor,
+                vendorname,
+                collection,
+                designid,
+                designcolor,
+                vendorItemCount,
+                images,
+            },
+            handleChangeVendor,
+            "modal-lg"
+        );
+    };
     // console.log(tooltip);
 
     useEffect(() => {
@@ -153,6 +182,16 @@ function DesignSectionAction({
                 >
                     <FiPlus />
                     <FiImage />
+                </button>
+                <button
+                    ref={btnDeleteRef}
+                    className={`btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Add Extra Color & Designs"
+                    onClick={handleAddExtraColorsAndDesigns}
+                >
+                    <FiAperture />
                 </button>
                 <button
                     ref={btnDeleteRef}

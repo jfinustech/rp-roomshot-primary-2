@@ -1,0 +1,77 @@
+@import "../colors";
+
+.colorcontainerwrapper {
+    .colorpopwrapper {
+        display: none;
+        width: 400px;
+        height: auto;
+        position: absolute;
+        transform: translateX(-40%);
+        // transform: translate-x(50%);
+        border: 1px solid silver;
+        bottom: 20px;
+        background: white;
+        justify-content: start;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 20px;
+        font-size: 12px;
+    }
+
+    //TODO: it has to work with click not hover.
+
+    // &.active {
+    //     .colorpopwrapper {
+    //         display: flex;
+    //         z-index: 9999;
+    //     }
+    // }
+
+    &:hover {
+        .colorpopwrapper {
+            display: flex;
+            z-index: 9999;
+        }
+        button {
+            background-color: gray !important;
+            color: white;
+        }
+    }
+
+    .option_color_title {
+        display: block;
+        font-weight: 500;
+        flex-grow: 1;
+        width: 100%;
+    }
+
+    .option_color_item {
+        flex-grow: 0;
+        flex-shrink: 0;
+        width: 48%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 10px;
+
+        &.active {
+            border-radius: 30px;
+            border: 3px solid $white;
+            outline: 2px solid $primary;
+        }
+
+        &:hover {
+            background: #f1f1f1;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .option_color_hex {
+            width: 30px;
+            height: 30px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            border-radius: 30px;
+        }
+    }
+}

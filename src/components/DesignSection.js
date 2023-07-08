@@ -491,7 +491,7 @@ function DesignSection({ design, reloadInitPage }) {
                                 handleChangeVendor={handleChangeVendor}
                                 vendorItemCount={designFilter.vendor}
                             />
-                            <div className="align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-2">
+                            <div className="gallery_wrapper_in align-self-stretch flex-grow-1 w-100 d-flex flex-wrap justify-content-start align-items-stretch gap-2">
                                 {images.length <= 0 && (
                                     <div className="d-flex justify-content-center align-items-center w-100 flex-column">
                                         <div className="border-bottom px-5">
