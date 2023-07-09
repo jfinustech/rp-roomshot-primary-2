@@ -11,13 +11,30 @@ const ColorOptions = ({
 }) => {
     // const getRandomNum = (min = 1111, max = 9999) =>
     //     Math.floor(Math.random() * (max - min + 1) + min);
+
+    let selected_val = selected;
+    let selected_default = "";
+    if (selected && selected !== "" && selected.includes("::")) {
+        selected_val = selected.split("::")[0];
+        selected_default = selected.split("::")[1];
+        selected = selected_val;
+    }
+
     return (
         <>
             <label className="form-label">
                 <span className="text-muted">
                     {selectedLabel ?? "--Missing Label"}:{" "}
                 </span>
-                {selected === "" ? "N/A" : selected}
+                {selected === "" ||
+                selected === "null" ||
+                selected === null ||
+                typeof selected === "undefined"
+                    ? "N/A"
+                    : selected}
+                {selected_default !== "" && (
+                    <span> (RP: {selected_default})</span>
+                )}
             </label>
             <div className="d-flex flex-wrap justify-content-start align-items-center gap-2">
                 {list &&

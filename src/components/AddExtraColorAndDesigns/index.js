@@ -240,9 +240,9 @@ const AddExtraColorAndDesigns = ({
                                         inputName="style_cat_1"
                                         selectedLabel="Style. 1"
                                         selected={
-                                            optionSelected.style_1 +
-                                                "::" +
-                                                pageData.style ?? pageData.style
+                                            (optionSelected.style_1 ?? "") +
+                                            "::" +
+                                            (pageData.style ?? "")
                                         }
                                         readonly={false}
                                         action={7}
@@ -282,10 +282,9 @@ const AddExtraColorAndDesigns = ({
                                         inputName="color_cat_1"
                                         selectedLabel="Color Cat. 1"
                                         selected={
-                                            optionSelected.color_cat_1 +
-                                                "::" +
-                                                pageData.color_cat_name ??
-                                            pageData.color_cat_name
+                                            (optionSelected.color_cat_1 ?? "") +
+                                            "::" +
+                                            (pageData.color_cat_name ?? "")
                                         }
                                         readonly={false}
                                         action={1}
@@ -320,9 +319,20 @@ const AddExtraColorAndDesigns = ({
                                 </div>
 
                                 <div className="color-name-container mb-4 pb-4 border-bottom">
-                                    <label className="form-label">
-                                        Color Name. 1: {pageData.designColor}
-                                    </label>
+                                    <ColorOptions
+                                        list={pageData.color_options ?? null}
+                                        inputName="color_name_1"
+                                        selectedLabel="Color Name. 1"
+                                        selected={
+                                            (optionSelected.color_name_1 ??
+                                                "") +
+                                            "::" +
+                                            (pageData.designColor ?? "")
+                                        }
+                                        readonly={false}
+                                        action={4}
+                                        callChanges={callChanges}
+                                    />
                                 </div>
                                 <div className="color-name-container mb-4 pb-4 border-bottom">
                                     <ColorOptions

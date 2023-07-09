@@ -24,7 +24,10 @@ function ListStyles({
                 <span className="text-muted">
                     {selectedLabel ?? "--Missing Label"}:{" "}
                 </span>
-                {selected === "" || selected === "null" || selected === null
+                {selected === "" ||
+                selected === "null" ||
+                selected === null ||
+                typeof selected === "undefined"
                     ? "N/A"
                     : selected}
                 {selected_default !== "" && (
