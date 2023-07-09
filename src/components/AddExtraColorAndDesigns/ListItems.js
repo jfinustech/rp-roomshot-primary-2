@@ -20,7 +20,7 @@ function ListItems({
 
     return (
         <>
-            <label className="form-label">
+            <label className="form-label text-capitalize">
                 <span className="text-muted">
                     {selectedLabel ?? "--Missing Label"}:{" "}
                 </span>

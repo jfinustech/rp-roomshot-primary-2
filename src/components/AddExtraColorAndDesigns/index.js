@@ -178,6 +178,17 @@ const AddExtraColorAndDesigns = ({
         setImageList(imgArray);
     }, [images, designid, designcolor]);
 
+    const compValues = (a, b) => {
+        const a_val = (a ?? "").trim().toLowerCase();
+        const b_val = (b ?? "").trim().toLowerCase();
+
+        if (a_val === b_val) return a;
+        if (!a_val && b_val) return b;
+        if (a_val && !b_val) return a;
+
+        return a_val + "::" + b_val;
+    };
+
     return (
         <>
             {isLoading && loadingRaw}
@@ -239,11 +250,10 @@ const AddExtraColorAndDesigns = ({
                                         list={preDefinedStyles}
                                         inputName="style_cat_1"
                                         selectedLabel="Style. 1"
-                                        selected={
-                                            (optionSelected.style_1 ?? "") +
-                                            "::" +
-                                            (pageData.style ?? "")
-                                        }
+                                        selected={compValues(
+                                            optionSelected.style_1,
+                                            pageData.style
+                                        )}
                                         readonly={false}
                                         action={7}
                                         callChanges={callChanges}
@@ -281,11 +291,10 @@ const AddExtraColorAndDesigns = ({
                                         list={preDefinedColors}
                                         inputName="color_cat_1"
                                         selectedLabel="Color Cat. 1"
-                                        selected={
-                                            (optionSelected.color_cat_1 ?? "") +
-                                            "::" +
-                                            (pageData.color_cat_name ?? "")
-                                        }
+                                        selected={compValues(
+                                            optionSelected.color_cat_1,
+                                            pageData.color_cat_name
+                                        )}
                                         readonly={false}
                                         action={1}
                                         callChanges={callChanges}
@@ -323,12 +332,10 @@ const AddExtraColorAndDesigns = ({
                                         list={pageData.color_options ?? null}
                                         inputName="color_name_1"
                                         selectedLabel="Color Name. 1"
-                                        selected={
-                                            (optionSelected.color_name_1 ??
-                                                "") +
-                                            "::" +
-                                            (pageData.designColor ?? "")
-                                        }
+                                        selected={compValues(
+                                            optionSelected.color_name_1,
+                                            pageData.designColor
+                                        )}
                                         readonly={false}
                                         action={4}
                                         callChanges={callChanges}
