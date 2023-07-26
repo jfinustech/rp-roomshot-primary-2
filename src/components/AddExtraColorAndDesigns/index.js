@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ImagePup } from "../../aux/ImagePup";
 import ListItems from "./ListItems";
 import axios from "axios";
@@ -51,6 +51,8 @@ const AddExtraColorAndDesigns = ({
     const [errorMessage, setErrorMessage] = useState("");
     const [optionSelected, setOptionSelected] = useState([]);
     const [showStyleTab, setShowStyleTab] = useState(false);
+    const imageGalleryItem = useRef();
+    const imageGalleryLoading = useRef();
     const [preDefinedStyles] = useState([
         "Americana",
         "Bohemian & Eclectic",
@@ -85,6 +87,22 @@ const AddExtraColorAndDesigns = ({
         "Vintage",
     ]);
 
+    const ImagePupMini = (e) => {
+        if (e !== "" && typeof e !== "undefined") {
+            imageGalleryLoading.current.style.display = "block";
+            new Promise((res) => {
+                const img = new Image(1500, 1500);
+                img.src = e;
+                res(e);
+            }).then((data) => {
+                imageGalleryItem.current.src = data.replace(
+                    "_thumb.",
+                    "_large."
+                );
+                imageGalleryLoading.current.style.display = "none";
+            });
+        }
+    };
     const makeChange = async (action, value) => {
         if (!action || isNaN(action) || typeof action === "undefined") {
             return alert("Invalid action ID.");
@@ -221,12 +239,52 @@ const AddExtraColorAndDesigns = ({
                     <div className="row mt-4">
                         <div className="col-4">
                             <p className="mb-4">Sample Images:</p>
-                            <div className="d-flex flex-wrap justify-content-start align-items-center gap-2">
-                                {imageList &&
-                                    imageList.length > 0 &&
-                                    imageList.sort().map((image) => (
-                                        <>
+                            {imageList && imageList.length > 0 && (
+                                <>
+                                    <div className="position-relative w-100">
+                                        <div
+                                            style={{
+                                                position: "absolute",
+                                                left: "50%",
+                                                top: "50%",
+                                                transform:
+                                                    "translate(-50%, -50%)",
+                                                display: "none",
+                                            }}
+                                            ref={imageGalleryLoading}
+                                        >
+                                            {loadingRaw}
+                                        </div>
+                                        <div className="d-flex w-100 justify-content-center align-items-center mb-4 ">
                                             <img
+                                                className="border rounded rounded-1"
+                                                src={imageList
+                                                    .sort()[0]
+                                                    .replace(
+                                                        "_thumb.",
+                                                        "_large."
+                                                    )}
+                                                alt="mainimagegallery"
+                                                style={{
+                                                    width: "270px",
+                                                    height: "270px",
+                                                    cursor: "pointer",
+                                                    objectFit: "cover",
+                                                }}
+                                                onClick={(e) =>
+                                                    ImagePup(
+                                                        imageGalleryItem.current
+                                                            .src
+                                                    )
+                                                }
+                                                ref={imageGalleryItem}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="d-flex flex-wrap justify-content-start align-items-center gap-2">
+                                        {imageList.sort().map((image) => (
+                                            <img
+                                                key={image}
                                                 className="border rounded rounded-1"
                                                 src={image}
                                                 style={{
@@ -236,11 +294,14 @@ const AddExtraColorAndDesigns = ({
                                                     cursor: "pointer",
                                                 }}
                                                 alt=""
-                                                onClick={(e) => ImagePup(image)}
+                                                onClick={(e) =>
+                                                    ImagePupMini(image)
+                                                }
                                             />
-                                        </>
-                                    ))}
-                            </div>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
                         </div>
                         {showStyleTab && (
                             <div className="col-7 offset-1">
@@ -286,6 +347,15 @@ const AddExtraColorAndDesigns = ({
                         {!showStyleTab && (
                             <div className="col-7 offset-1">
                                 <p className="mb-4">Attributes:</p>
+
+                                {pageData.other_colors !== "" && (
+                                    <div className="p-3 border rounded rounded-1 bg-light mb-3">
+                                        <small className="d-block fw-bold mb-2">
+                                            UL Other Colors:
+                                        </small>
+                                        {pageData.other_colors}
+                                    </div>
+                                )}
                                 <div className="color-cat-container mb-4 pb-4 border-bottom">
                                     <ListItems
                                         list={preDefinedColors}
