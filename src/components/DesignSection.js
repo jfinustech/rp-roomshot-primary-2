@@ -436,8 +436,43 @@ function DesignSection({ design, reloadInitPage }) {
                         <div className={`${styles.contentSectionInner}`}>
                             <div className="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h3 className="p-0 m-0">
+                                    <h3 className="p-0 m-0 d-flex justify-content-start align-items-center">
                                         {designFilter.collectionname}
+                                        {design.is_rugscom && (
+                                            <small
+                                                className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
+                                                style={{ fontSize: 14 }}
+                                            >
+                                                rugs.com
+                                            </small>
+                                        )}
+
+                                        {design.is_discontinued === 0 && (
+                                            <small
+                                                className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
+                                                style={{ fontSize: 14 }}
+                                            >
+                                                Discontinued
+                                            </small>
+                                        )}
+                                        {design.is_discontinued > 0 && (
+                                            <small
+                                                className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
+                                                style={{ fontSize: 14 }}
+                                            >
+                                                Discontinued With{" "}
+                                                {design.is_discontinued} Total
+                                                Inventory
+                                            </small>
+                                        )}
+                                        {!design.is_discontinued && (
+                                            <small
+                                                className="border rounded rounded-1 text-success ms-3 border-success py-1 px-2 d-inline-block"
+                                                style={{ fontSize: 14 }}
+                                            >
+                                                Active
+                                            </small>
+                                        )}
                                     </h3>
                                     <div className="d-flex justify-content-start align-items-center">
                                         <p className="p-0 m-0 py-2 pe-4 me-4 border-end">
