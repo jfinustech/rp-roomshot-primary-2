@@ -447,20 +447,23 @@ function DesignSection({ design, reloadInitPage }) {
                                             </small>
                                         )}
 
-                                        {design.is_discontinued === 0 && (
+                                        {/* {design.is_discontinued === 0 && (
                                             <small
                                                 className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
                                                 style={{ fontSize: 14 }}
                                             >
                                                 Discontinued
                                             </small>
-                                        )}
+                                        )} */}
                                         {design.is_discontinued > 0 && (
                                             <small
                                                 className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
                                                 style={{ fontSize: 14 }}
                                             >
-                                                Discontinued With Inventory
+                                                Discontinued{" "}
+                                                {design.total_stock > 0 && (
+                                                    <>Width Inventory</>
+                                                )}
                                             </small>
                                         )}
                                         {design.is_discontinued < 0 && (
@@ -468,7 +471,7 @@ function DesignSection({ design, reloadInitPage }) {
                                                 className="border rounded rounded-1 text-success ms-3 border-success py-1 px-2 d-inline-block"
                                                 style={{ fontSize: 14 }}
                                             >
-                                                Active
+                                                All Active
                                             </small>
                                         )}
                                     </h3>
