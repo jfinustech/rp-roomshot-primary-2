@@ -9,6 +9,7 @@ import {
     FiImage,
     FiPlus,
     FiAperture,
+    FiFileText,
 } from "react-icons/fi";
 import UploadFile from "./UploadFile";
 import { HandleModal } from "../aux/HandleModal";
@@ -44,6 +45,24 @@ function DesignSectionAction({
         HandleModal(
             "SKU Transfer",
             "SkuTransfer",
+            {
+                vendor,
+                vendorname,
+                designid,
+                designcolor,
+                collection,
+            },
+            reloadInitPage,
+            "modal-lg"
+        );
+    };
+
+    const handleEditDescription = (e) => {
+        e.preventDefault();
+
+        HandleModal(
+            "Edit Description",
+            "editDescription",
             {
                 vendor,
                 vendorname,
@@ -213,6 +232,15 @@ function DesignSectionAction({
                     onClick={handleSkuTransfer}
                 >
                     <FiCopy />
+                </button>
+                <button
+                    className={`btn border border text-muted rounded-1 py-1 px-4 ${styles.btnDeleteAll}`}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Edit Description"
+                    onClick={handleEditDescription}
+                >
+                    <FiFileText />
                 </button>
                 <UploadFile
                     designid={designid}
