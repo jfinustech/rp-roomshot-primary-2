@@ -14,6 +14,7 @@ import { HandleModal } from "../aux/HandleModal";
 import DesignVendorTabs from "./DesignVendorTabs";
 import { MainContext } from "./MainContext";
 import { initLoadingElement, removeLoadingElement } from "./LoadingElement";
+import DesignSectionDiscontinuedBadge from "./DesignSectionDiscontinuedBadge";
 
 const VIEW_URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 
@@ -438,42 +439,14 @@ function DesignSection({ design, reloadInitPage }) {
                                 <div>
                                     <h3 className="p-0 m-0 d-flex justify-content-start align-items-center">
                                         {designFilter.collectionname}
-                                        {design.is_rugscom && (
-                                            <small
-                                                className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
-                                                style={{ fontSize: 14 }}
-                                            >
-                                                rugs.com
-                                            </small>
-                                        )}
-
-                                        {/* {design.is_discontinued === 0 && (
-                                            <small
-                                                className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
-                                                style={{ fontSize: 14 }}
-                                            >
-                                                Discontinued
-                                            </small>
-                                        )} */}
-                                        {design.is_discontinued > 0 && (
-                                            <small
-                                                className="border rounded rounded-1 text-danger ms-3 border-danger py-1 px-2 d-inline-block"
-                                                style={{ fontSize: 14 }}
-                                            >
-                                                Discontinued{" "}
-                                                {design.total_stock > 0 && (
-                                                    <>Width Inventory</>
-                                                )}
-                                            </small>
-                                        )}
-                                        {design.is_discontinued < 0 && (
-                                            <small
-                                                className="border rounded rounded-1 text-success ms-3 border-success py-1 px-2 d-inline-block"
-                                                style={{ fontSize: 14 }}
-                                            >
-                                                All Active
-                                            </small>
-                                        )}
+                                        <DesignSectionDiscontinuedBadge
+                                            design={design}
+                                            vendor={designFilter.vendor}
+                                            collection={
+                                                designFilter.collectionname
+                                            }
+                                            designid={designFilter.designid}
+                                        />
                                     </h3>
                                     <div className="d-flex justify-content-start align-items-center">
                                         <p className="p-0 m-0 py-2 pe-4 me-4 border-end">

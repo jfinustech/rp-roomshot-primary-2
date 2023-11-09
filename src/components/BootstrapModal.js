@@ -3,6 +3,7 @@ import SkuTransfer from "./SkuTransfer";
 import ImportMissingImages from "./ImportMissingImages";
 import AddExtraColorAndDesigns from "./AddExtraColorAndDesigns";
 import EditDescription from "./EditDescription";
+import DesignSectionDiscontinuedList from "./DesignSectionDiscontinuedList";
 
 function BootstrapModal({
     title,
@@ -57,6 +58,9 @@ function BootstrapModal({
                         )}
                         {dataComponent === "editDescription" && (
                             <EditDescription data={data} reloadInitPage={act} />
+                        )}
+                        {dataComponent === "DesignSectionDiscontinuedList" && (
+                            <DesignSectionDiscontinuedList data={data} />
                         )}
                     </div>
                     {/* <div className="modal-footer">

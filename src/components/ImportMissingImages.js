@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FiDownload, FiDownloadCloud } from "react-icons/fi";
-import Loading from "./Loading";
+import Loading, { loadingRaw } from "./Loading";
 import styles from "../styles/modules/importMissingImages.module.scss";
 import ImportMissingImagesImage from "./ImportMissingImagesImage";
 import ImportMissingImageFromLink from "./ImportMissingImageFromLink";
+import ImportMissingImagesSkuLevel from "./ImportMissingImagesSkuLevel";
 
 const URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
 const IMAGE_URL = "https://sandbx.rugpal.com/office/jay/v2/images/collect.php";
@@ -39,6 +40,7 @@ function ImportMissingImages({
     const [hasErrorTransferingImages, setHasErrorTransferingImages] =
         useState(false);
     const [refetch, setRefetch] = useState();
+    const [itemSkus, setItemSkus] = useState();
 
     const fetchImageImages = async (skuSet = false) => {
         setIsLoadingImages(true);
@@ -144,6 +146,36 @@ function ImportMissingImages({
         //setHasImageToTransfer
     };
 
+    const fetchSkuLevelItems = async (v, d, c) => {
+        return axios({
+            method: "POST",
+            url: "https://sandbx.rugpal.com/office/jay/v2/designs.asp",
+            data: {
+                vendor: v,
+                designid: d,
+                designcolor: c,
+                action: "SKULEVELFETCH",
+            },
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        });
+    };
+
+    const handleSkuLevelClick = (e) => {
+        setActiveTab(e.target.getAttribute("aria-controls"));
+
+        const fetchdata = fetchSkuLevelItems(vendor, designid, designcolor);
+        fetchdata
+            .then((d) => {
+                setItemSkus(d.data);
+                return;
+            })
+            .catch((err) => {
+                setErrorMessage(err);
+            });
+    };
+
     const handleTransferImages = async (withshape) => {
         if (!hasImageToTransfer)
             return alert("Select at least one images to transfer.");
@@ -189,6 +221,7 @@ function ImportMissingImages({
         );
         // document.querySelector("[data-bs-dismiss]").click();
     };
+
     useEffect(() => {
         const fetchInitPage = async () => {
             setIsLoading(true);
@@ -299,6 +332,25 @@ function ImportMissingImages({
                         }
                     >
                         Import from Link
+                    </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                    <button
+                        className={`nav-link py-2 px-4 rounded-1 ${
+                            activeTab === "import-sku-level"
+                                ? "active bg-info"
+                                : "text-secondary"
+                        }`}
+                        id="import-sku-level-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#import-sku-level"
+                        type="button"
+                        role="tab"
+                        aria-controls="import-sku-level"
+                        aria-selected="false"
+                        onClick={(e) => handleSkuLevelClick(e)}
+                    >
+                        SKU Level
                     </button>
                 </li>
                 {/* <li className="nav-item" role="presentation">
@@ -623,6 +675,38 @@ function ImportMissingImages({
                             vendorItemCount={vendorItemCount}
                         />
                     </div>
+                </div>
+                <div
+                    className={`tab-pane fade ${
+                        activeTab === "import-sku-level" ? "show active" : ""
+                    }`}
+                    id="import-sku-level"
+                    role="tabpanel"
+                    aria-labelledby="import-sku-level-tab"
+                    tabIndex="0"
+                >
+                    {!itemSkus && loadingRaw}
+                    {itemSkus && (
+                        <ul className={`${styles.skulevelul}`}>
+                            {itemSkus.map((itemsku) => (
+                                <li key={itemsku.id}>
+                                    <p>{itemsku.shape}</p>
+                                    <ul
+                                        className={`d-flex flex-wrap justify-content-start gap-2 mb-3 ${styles.skulevelul}`}
+                                    >
+                                        {itemsku.items.map((item) => (
+                                            <ImportMissingImagesSkuLevel
+                                                key={item.sku}
+                                                singleItem={item}
+                                                shape={itemsku.shape}
+                                                styles={styles}
+                                            />
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
                 {/* <div
                     className={`tab-pane fade ${

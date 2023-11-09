@@ -1,3 +1,4 @@
+@import "../colors";
 .imagewrapper {
     --box-width: 170px;
     --light-green: #f0ffea;
@@ -47,4 +48,58 @@
         width: 300px;
         object-fit: cover;
     }
+}
+
+.skulevelul {
+    list-style: none;
+}
+
+// .skulevelthumbli {
+//     width: 250px;
+//     min-height: 102px;
+// }
+.skulevelthumb {
+    position: relative;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    width: inherit;
+    min-height: 102px;
+
+    .skulevelthumb_imagewrapper {
+        width: 60px;
+        height: 80px;
+        max-height: 80px;
+        position: relative;
+        text-align: center;
+        margin-right: 20px;
+        img {
+            max-height: inherit;
+            cursor: pointer;
+        }
+    }
+    .skulevelthumb_infowrapper {
+        font-size: 70%;
+    }
+}
+
+.skulevelthumb_btn_wrapper {
+    button,
+    label {
+        font-size: 12px;
+        border: none;
+        &:active,
+        &:focus {
+            outline: navajowhite;
+        }
+
+        &:hover {
+            background-color: $gray-100;
+        }
+    }
+}
+
+.dragging {
+    background: lightblue;
+    user-select: none;
 }
