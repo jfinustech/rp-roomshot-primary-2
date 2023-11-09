@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { loadingRaw } from "./Loading";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 export default function DesignSectionDiscontinuedList({ data }) {
     const FETCH_URL = "https://sandbx.rugpal.com/office/jay/v2/designs.asp";
@@ -206,7 +206,9 @@ export default function DesignSectionDiscontinuedList({ data }) {
                                                 (f) => f.show === 1
                                             )
                                         )}
-                                        filename={`${designID}-report.csv`}
+                                        filename={`${data.collection
+                                            .replace(/\s+/g, "-")
+                                            .toLowerCase()}-${designID}-report.csv`}
                                         className="btn btn-sm btn-primary"
                                     >
                                         Download CSV
